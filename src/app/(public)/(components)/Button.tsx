@@ -1,6 +1,25 @@
 import React from "react";
 import clsx from "clsx";
 
+interface Button2Props {
+  children: React.ReactNode;
+  className?: string;
+}
+export const GradientButtonSoft = ({ children, className }: Button2Props) => {
+  return (
+    <div
+      className={clsx(
+        "inline-block px-4 py-2 rounded-full",
+        "bg-gradient-to-r from-purple-500/10 to-pink-500/10",
+        "border border-purple-500/20",
+        className,
+      )}
+    >
+      <span className="text-sm text-purple-300 font-medium">{children}</span>
+    </div>
+  );
+};
+
 type Gradient = "blue" | "purple" | "green" | "orange" | "pink";
 
 type Variant = "primary" | "secondary" | "outline" | "gray" | "black";
@@ -36,7 +55,7 @@ export default function GradientButton({
   return (
     <button
       className={clsx(
-        "relative inline-flex items-center justify-center rounded-xl font-semibold",
+        "relative inline-flex items-center justify-center rounded-full font-semibold",
         "transition-all duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none",
         sizeMap[size],
 

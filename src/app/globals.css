@@ -24,3 +24,105 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Custom Scrollbar Styles - Only for screens above sm breakpoint (640px+) */
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+@media (min-width: 640px) {
+  /* Scrollbar track */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Scrollbar track background */
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* Scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgba(168, 85, 247, 0.6) 0%,
+      rgba(236, 72, 153, 0.6) 100%
+    );
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  /* Scrollbar thumb on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      rgba(168, 85, 247, 0.8) 0%,
+      rgba(236, 72, 153, 0.8) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Scrollbar thumb when active/being dragged */
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(
+      180deg,
+      rgba(168, 85, 247, 1) 0%,
+      rgba(236, 72, 153, 1) 100%
+    );
+  }
+
+  /* Scrollbar corner (where horizontal and vertical scrollbars meet) */
+  ::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 85, 247, 0.6) rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Optional: Custom scrollbar for specific elements (if needed) */
+@media (min-width: 640px) {
+  /* For darker scrollbar in lighter sections */
+  .scrollbar-dark::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgba(168, 85, 247, 0.8) 0%,
+      rgba(236, 72, 153, 0.8) 100%
+    );
+  }
+
+  /* For lighter scrollbar in darker sections */
+  .scrollbar-light::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .scrollbar-light::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgba(168, 85, 247, 0.5) 0%,
+      rgba(236, 72, 153, 0.5) 100%
+    );
+  }
+}
