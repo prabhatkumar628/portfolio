@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Provider from "./Provider";
@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     apple: "/icons/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
