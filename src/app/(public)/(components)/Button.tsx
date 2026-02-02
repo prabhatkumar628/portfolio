@@ -55,7 +55,7 @@ export default function GradientButton({
   return (
     <button
       className={clsx(
-        "relative inline-flex items-center justify-center rounded-full font-semibold",
+        "relative inline-flex items-center justify-center rounded-full font-semibold cursor-pointer",
         "transition-all duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none",
         sizeMap[size],
 

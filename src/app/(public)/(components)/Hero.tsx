@@ -14,7 +14,7 @@ export default function Hero() {
             Trust me,
           </p>
           <h1 className="text-4xl md:text-5xl xl:text-6xl font-bold leading-tight">
-            <span className="block text-white/90 mb-2">I'm a</span>
+            <span className="block text-white/90 mb-2">I{`'`}m a</span>
             <span className="block bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
               Software Engineer
             </span>
@@ -41,7 +41,7 @@ export default function Hero() {
           {/* Main Avatar Container */}
           <div className="relative group">
             {/* Hover Enhanced Glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full blur-lg group-hover:blur-xl transition-all duration-300 animate-pulse"></div>
+            {/* <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full blur-lg group-hover:blur-xl transition-all duration-300 animate-pulse"></div> */}
 
             {/* Gradient Border */}
             <div className="relative flex h-48 w-48 md:h-56 md:w-56 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 p-1 transition-all duration-300">
@@ -88,26 +88,21 @@ export default function Hero() {
 
         {/* ========== CTA BUTTONS ========== */}
         <div className="flex flex-wrap gap-4 justify-center pt-4">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-md group-hover:blur-lg transition-all opacity-50"></div>
+          <Link href={"/projects"}>
             <GradientButton gradient="purple" className="relative">
-              <span className="flex items-center gap-2">
-                View My Work
-              </span>
+              <span className="flex items-center gap-2">My Work</span>
             </GradientButton>
-          </div>
+          </Link>
 
           <Link href="/contact-us">
             <GradientButton variant="gray" className="group">
-              <span className="flex items-center gap-2">
-                Let's Talk
-              </span>
+              <span className="flex items-center gap-2">Let{`'`}s Talk</span>
             </GradientButton>
           </Link>
         </div>
 
         {/* ========== SOCIAL PROOF / STATS ========== */}
-        {/* <div className="grid grid-cols-3 gap-6 md:gap-12 pt-8 w-full max-w-2xl">
+        <div className="grid grid-cols-3 gap-6 md:gap-12 pt-8 w-full max-w-2xl">
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
             <div className="relative text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all">
@@ -137,7 +132,7 @@ export default function Hero() {
               <p className="text-xs md:text-sm text-white/60 mt-1">Clients</p>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </section>
   );

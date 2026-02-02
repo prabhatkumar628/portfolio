@@ -7,7 +7,7 @@ type Connection = { isConnected: boolean };
 const connection: Connection = {
   isConnected: false,
 };
-const DB_URL = `${process.env.MONGODB_URL}/my_porfolio`;
+const DB_URL = `${process.env.MONGODB_URI}/my_porfolio`;
 
 const dbConnect = async () => {
   if (connection.isConnected) {
