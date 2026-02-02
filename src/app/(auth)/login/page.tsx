@@ -1,3 +1,4 @@
+import "../../(public)/contact-us/style.css"
 import { Suspense } from "react";
 import LoginClient from "./LoginClient";
 

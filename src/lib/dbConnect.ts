@@ -20,7 +20,7 @@ const dbConnect = async () => {
     });
     connection.isConnected = db.connections[0].readyState === 1;
     console.log(`MongoDB connected !!! HOST:`, db.connection.host);
-    const user = await UserModel.findOne({ email: "kprabht628@gmail.com" });
+    const user = await UserModel.findOne({ email: "kprabhat628@gmail.com" });
     if (user) {
       console.log(`User already available`);
     } else {
