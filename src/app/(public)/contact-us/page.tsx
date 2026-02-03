@@ -33,8 +33,12 @@ import {
   CommandList,
 } from "../../../components/ui/command";
 import GradientButton from "../(components)/Button";
+import { useContact } from "../../../hooks/useContactPublic";
+import { toast } from "sonner";
+import Loading from "../loading";
 
 export default function ContactPage() {
+  const { mutate: contact, isPending, error, isError } = useContact();
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
     defaultValues: {
@@ -45,10 +49,22 @@ export default function ContactPage() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof messageSchema>) => {};
+  const onSubmit = async (data: z.infer<typeof messageSchema>) => {
+    await contact(data, {
+      onSuccess: (res) => {
+        toast.success(res.message);
+        form.reset();
+      },
+      onError: (res) => {
+        console.log(res);
+        toast.error(res.message);
+      },
+    });
+  };
 
   return (
     <main className="mx-auto max-w-7xl p-4 py-12">
+      {isPending && <Loading />}
       {/* ================= PAGE HEADER ================= */}
       <div className="mb-16 text-center">
         <h1 className="text-3xl font-semibold leading-tight text-white md:text-4xl mb-4">

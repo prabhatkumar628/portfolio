@@ -26,11 +26,13 @@ export interface MessageType extends Document {
   isSpam: boolean;
   spamScore: number;
   readAt: Date;
+  createAt: Date;
+  updatedAt: Date;
 }
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const MessageSchema = new Schema<MessageType>(
+const messageSchema = new Schema<MessageType>(
   {
     name: {
       type: String,
@@ -128,7 +130,7 @@ const MessageSchema = new Schema<MessageType>(
   },
 );
 
-MessageSchema.pre("save", function () {
+messageSchema.pre("save", function () {
   if (this.isModified("status") && this.status === "read" && !this.readAt) {
     this.readAt = new Date();
   }
@@ -139,10 +141,12 @@ MessageSchema.pre("save", function () {
   }
 });
 
-MessageSchema.index({ status: 1, createdAt: -1 });
-MessageSchema.index({ email: 1 });
-MessageSchema.index({ priority: 1, status: 1 });
-MessageSchema.index({ isSpam: 1 });
+messageSchema.index({ status: 1, createdAt: -1 });
+messageSchema.index({ email: 1 });
+messageSchema.index({ priority: 1, status: 1 });
+messageSchema.index({ isSpam: 1 });
 
-export default mongoose.models.Message ||
-  mongoose.model("Message", MessageSchema);
+const MessageModel =
+  (mongoose.models.Message as mongoose.Model<MessageType>) ||
+  mongoose.model<MessageType>("Message", messageSchema);
+export default MessageModel;
