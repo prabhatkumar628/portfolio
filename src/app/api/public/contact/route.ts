@@ -41,11 +41,11 @@ export async function POST(request: Request) {
       request.headers.get("x-vercel-ip-country") ||
       request.headers.get("cf-ipcountry") ||
       "Unknown";
-    if (ip) {
-      const res = await fetch(`https://ipapi.co/${ip}/json/`);
-      geo = await res.json();
-      newMessage.city = geo.city || "";
-    }
+    // if (ip) {
+    //   const res = await fetch(`https://ipapi.co/${ip}/json/`);
+    //   geo = await res.json();
+    //   newMessage.city = geo.city || "";
+    // }
     newMessage.ipAddress = ip;
     newMessage.userAgent = userAgent ?? "";
     newMessage.browser = ua.getBrowser().name ?? "";

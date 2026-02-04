@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft } from "../(public)/(components)/Svg";
+import { useGetAdminMessages } from "../../hooks/useAdminMessages";
 
 export default function AdminDashboard({
   children,
@@ -12,6 +13,8 @@ export default function AdminDashboard({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  // const {data} = useGetAdminMessages()
+  // data?.unreadCount
 
   const navigation = [
     {

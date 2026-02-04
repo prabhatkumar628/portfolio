@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
-export interface MessageType extends Document {
+export interface IMessage extends Document {
   name: string;
   email: string;
   phone: {
@@ -26,13 +26,13 @@ export interface MessageType extends Document {
   isSpam: boolean;
   spamScore: number;
   readAt: Date;
-  createAt: Date;
+  createdAt: Date;
   updatedAt: Date;
 }
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const messageSchema = new Schema<MessageType>(
+const messageSchema = new Schema<IMessage>(
   {
     name: {
       type: String,
@@ -147,6 +147,6 @@ messageSchema.index({ priority: 1, status: 1 });
 messageSchema.index({ isSpam: 1 });
 
 const MessageModel =
-  (mongoose.models.Message as mongoose.Model<MessageType>) ||
-  mongoose.model<MessageType>("Message", messageSchema);
+  (mongoose.models.Message as mongoose.Model<IMessage>) ||
+  mongoose.model<IMessage>("Message", messageSchema);
 export default MessageModel;
