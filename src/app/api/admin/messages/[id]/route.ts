@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession();
@@ -54,7 +54,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession();
@@ -86,7 +86,7 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession();
@@ -107,8 +107,8 @@ export async function PATCH(
     const body = await request.json();
     const updatedMessage = await MessageModel.findByIdAndUpdate(
       id,
-      { $set: body }, 
-      { new: true }, 
+      { $set: body },
+      { new: true },
     );
 
     if (!updatedMessage) {
