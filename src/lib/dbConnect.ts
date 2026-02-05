@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import UserModel from "../models/user.model";
 import bcrypt from "bcryptjs";
+import { seedSkills } from "../../scripts/seed-skills";
+import { seedExperience } from "../../scripts/seed-experience";
 
 type Connection = { isConnected: boolean };
 
@@ -20,21 +22,28 @@ const dbConnect = async () => {
     });
     connection.isConnected = db.connections[0].readyState === 1;
     console.log(`MongoDB connected !!! HOST:`, db.connection.host);
-    const user = await UserModel.findOne({ email: "kprabhat628@gmail.com" });
-    if (user) {
-      console.log(`User already available`);
-    } else {
-      const hashedPassword = await bcrypt.hash("user@123", 10);
-      const newUser = await UserModel.create({
-        name: "Prabhat Kumar",
-        email: "kprabhat628@gmail.com",
-        password: hashedPassword,
-      });
-      console.log(`New User created successfully`, {
-        name: newUser.name,
-        email: newUser.email,
-      });
-    }
+    // // skill seeding
+    // await seedSkills();
+
+    // // experience seeding
+    // await seedExperience()
+
+    // // admin seeding
+    // const user = await UserModel.findOne({ email: "kprabhat628@gmail.com" });
+    // if (user) {
+    //   console.log(`User already available`);
+    // } else {
+    //   const hashedPassword = await bcrypt.hash("user@123", 10);
+    //   const newUser = await UserModel.create({
+    //     name: "Prabhat Kumar",
+    //     email: "kprabhat628@gmail.com",
+    //     password: hashedPassword,
+    //   });
+    //   console.log(`New User created successfully`, {
+    //     name: newUser.name,
+    //     email: newUser.email,
+    //   });
+    // }
   } catch (error) {
     console.log(`MongoDB connection ERROR:`, error);
     process.exit(1);

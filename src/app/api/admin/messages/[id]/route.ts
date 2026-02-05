@@ -3,19 +3,20 @@ import dbConnect from "../../../../../lib/dbConnect";
 import { getServerSession } from "next-auth";
 import MessageModel from "../../../../../models/message.model";
 import mongoose from "mongoose";
+import authOptions from "../../../auth/[...nextauth]/authOptions";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await getServerSession();
-    if (!session) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 },
-      );
-    }
+    // const session = await getServerSession(authOptions);
+    // if (!session) {
+    //   return NextResponse.json(
+    //     { success: false, message: "Unauthorized" },
+    //     { status: 401 },
+    //   );
+    // }
     await dbConnect();
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -57,13 +58,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await getServerSession();
-    if (!session) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 },
-      );
-    }
+    // const session = await getServerSession(authOptions);
+    // if (!session) {
+    //   return NextResponse.json(
+    //     { success: false, message: "Unauthorized" },
+    //     { status: 401 },
+    //   );
+    // }
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -89,13 +90,13 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await getServerSession();
-    if (!session) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 },
-      );
-    }
+    // const session = await getServerSession(authOptions);
+    // if (!session) {
+    //   return NextResponse.json(
+    //     { success: false, message: "Unauthorized" },
+    //     { status: 401 },
+    //   );
+    // }
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -119,7 +120,11 @@ export async function PATCH(
     }
 
     return NextResponse.json(
-      { success: true, message: "Message updated successfully" },
+      {
+        success: true,
+        message: "Message updated successfully",
+        data: updatedMessage,
+      },
       { status: 200 },
     );
   } catch (error) {

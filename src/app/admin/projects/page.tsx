@@ -107,14 +107,14 @@ export default function ProjectsPage() {
     return true;
   });
 
-  const getStatusBadge = (status) => {
-    const badges = {
-      completed: { text: "Completed", color: "bg-green-500/20 text-green-400 border-green-500/30" },
-      "in-progress": { text: "In Progress", color: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
-      archived: { text: "Archived", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
-    };
-    return badges[status] || badges.completed;
-  };
+  // const getStatusBadge = (status:any) => {
+  //   const badges = {
+  //     completed: { text: "Completed", color: "bg-green-500/20 text-green-400 border-green-500/30" },
+  //     "in-progress": { text: "In Progress", color: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
+  //     archived: { text: "Archived", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+  //   };
+  //   return badges[status] || badges.completed;
+  // };
 
   return (
     <div className="space-y-6">
@@ -246,7 +246,7 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center gap-4 mb-4 text-sm text-white/50">
+                {/* <div className="flex items-center gap-4 mb-4 text-sm text-white/50">
                   <span className="flex items-center gap-1">
                     👁️ {project.views}
                   </span>
@@ -256,7 +256,7 @@ export default function ProjectsPage() {
                   <span className={`ml-auto px-2 py-0.5 rounded-full text-xs border ${getStatusBadge(project.status).color}`}>
                     {getStatusBadge(project.status).text}
                   </span>
-                </div>
+                </div> */}
 
                 {/* Actions */}
                 <div className="flex gap-2">
@@ -302,9 +302,9 @@ export default function ProjectsPage() {
                       Draft
                     </span>
                   )}
-                  <span className={`ml-auto px-2 py-0.5 rounded-full text-xs border ${getStatusBadge(project.status).color} shrink-0`}>
+                  {/* <span className={`ml-auto px-2 py-0.5 rounded-full text-xs border ${getStatusBadge(project.status).color} shrink-0`}>
                     {getStatusBadge(project.status).text}
-                  </span>
+                  </span> */}
                 </div>
                 <p className="text-sm text-white/60 mb-3 line-clamp-1">{project.description}</p>
                 <div className="flex items-center gap-6 text-sm text-white/50">
