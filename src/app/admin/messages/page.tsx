@@ -6,6 +6,7 @@ import {
   useDeleteMessageById,
   useGetAdminMessages,
   useMarkAllAsReadMessages,
+  useUnreadMessageCount,
 } from "@/hooks/useAdminMessages";
 import Loading from "../../(public)/loading";
 import {
@@ -48,13 +49,15 @@ export default function MessagesPage() {
     search,
   });
   const markAllReadMutation = useMarkAllAsReadMessages();
+  const {data:unreadData} = useUnreadMessageCount()
+
   const { mutate: deleteMutate, isPending: deletePending } =
     useDeleteMessageById();
 
   // ─── Extracted Data ──────────────────────────
   const messages = data?.messages || [];
   const totalMessages = data?.totalMessages || 0;
-  const unreadCount = data?.unreadCount || 0;
+  const unreadCount = unreadData?.unreadCount || 0;
   const replyMessageCount = data?.replyMessageCount || 0;
   const spamCount = data?.spanCount || 0;
 

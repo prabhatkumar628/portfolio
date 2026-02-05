@@ -41,6 +41,7 @@ export type UpdateMessagePayload = {
 
 export const MESSAGE_KEY = {
   all: ["admin", "messages"] as const,
+  unreadCount: ["admin", "messages", "count"] as const,
   list: (q: FetchMessagesParams) =>
     [
       "admin",
@@ -128,5 +129,17 @@ export const useMarkAllAsReadMessages = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: MESSAGE_KEY.all });
     },
+  });
+};
+
+export const useUnreadMessageCount = () => {
+  return useQuery({
+    queryKey: MESSAGE_KEY.unreadCount,
+    queryFn: async () => {
+      const { data } = await api.get("/admin/messages/unread-count");
+      return data.data;
+    },
+    staleTime: 10 * 1000,
+    refetchOnWindowFocus: true,
   });
 };
