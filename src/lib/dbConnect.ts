@@ -3,6 +3,7 @@ import UserModel from "../models/user.model";
 import bcrypt from "bcryptjs";
 import { seedSkills } from "../../scripts/seed-skills";
 import { seedExperience } from "../../scripts/seed-experience";
+import { seedSettings } from "../../scripts/seed-settings";
 
 type Connection = { isConnected: boolean };
 
@@ -22,13 +23,16 @@ const dbConnect = async () => {
     });
     connection.isConnected = db.connections[0].readyState === 1;
     console.log(`MongoDB connected !!! HOST:`, db.connection.host);
-    // // skill seeding
-    // await seedSkills();
+    // skill seeding
+    await seedSkills();
 
-    // // experience seeding
-    // await seedExperience()
+    // experience seeding
+    await seedExperience()
 
-    // // admin seeding
+    // settings seeding
+    await seedSettings()
+
+    // admin seeding
     // const user = await UserModel.findOne({ email: "kprabhat628@gmail.com" });
     // if (user) {
     //   console.log(`User already available`);

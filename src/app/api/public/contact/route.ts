@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const ip = getIpAddress(request);
     const userAgent = request.headers.get("user-agent");
     const ua = new UAParser(userAgent || "");
-    let geo;
+    // let geo;
     const country =
       request.headers.get("x-vercel-ip-country") ||
       request.headers.get("cf-ipcountry") ||

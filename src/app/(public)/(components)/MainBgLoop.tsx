@@ -1,13 +1,26 @@
 "use client";
 
-import React, { ReactNode, useRef } from "react";
+import React, { ReactNode, useMemo, useRef } from "react";
+import { useSettings } from "../../../hooks/usePublic";
+import Loading from "../loading";
+import settingsStatic from "../../../data/settings.static";
 
 export default function MainBgLoop({ children }: { children: ReactNode }) {
   const videoRef1 = useRef<HTMLVideoElement | null>(null);
   const videoRef2 = useRef<HTMLVideoElement | null>(null);
 
+  const { data: settingsData, isLoading: settingsLoading } = useSettings();
+  // ✅ FINAL VIDEO SOURCES (API > STATIC)
+  const videoSrc = useMemo(() => {
+    return {
+      mobile: settingsData?.siteVideoSm || settingsStatic.siteVideoSm,
+      desktop: settingsData?.siteVideoLg || settingsStatic.siteVideoLg,
+    };
+  }, [settingsData]);
+
   return (
     <main className="relative min-h-screen overflow-hidden">
+      {settingsLoading && <Loading />}
       {/* ================= VIDEO BACKGROUND ================= */}
       <div className="absolute inset-0 z-0">
         {/* Mobile */}
@@ -19,7 +32,7 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
           muted
           playsInline
         >
-          <source src="/images/home/bg.mp4" type="video/mp4" />
+          <source src={videoSrc.mobile} type="video/mp4" />
         </video>
 
         {/* Desktop */}
@@ -31,17 +44,17 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
           muted
           playsInline
         >
-          <source src="/images/home/bg2.mp4" type="video/mp4" />
+          <source src={videoSrc.desktop} type="video/mp4" />
         </video>
       </div>
 
       {/* ================= GRID + GRADIENT OVERLAY ================= */}
       <div className="pointer-events-none absolute inset-0 z-10">
         {/* Dark gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-950/30 to-black" />
+        <div className="absolute inset-0 bg-linear-to-br from-black via-purple-950/30 to-black" />
 
         {/* Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-size-[4rem_4rem]" />
       </div>
 
       {/* ================= UI CONTENT ================= */}

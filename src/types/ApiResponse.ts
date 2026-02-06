@@ -1,6 +1,11 @@
-export interface ApiResponse {
-  success: boolean;
-  message: string;
-  data?: Record<string, string | number | Record<string, string | number>>;
-  errors?: string[];
-}
+export type ApiResponse<T> =
+  | {
+      success: true;
+      message: string;
+      data: T; 
+    }
+  | {
+      success: false;
+      message: string;
+      errors?: string[];
+    };

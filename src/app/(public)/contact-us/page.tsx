@@ -17,7 +17,7 @@ import {
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { Button } from "../../../components/ui/button";
-import { contactMethods, countryCodes } from "./Data";
+import ContactMethods, { countryCodes } from "./ContactMethods";
 import {
   Popover,
   PopoverContent,
@@ -33,9 +33,9 @@ import {
   CommandList,
 } from "../../../components/ui/command";
 import GradientButton from "../(components)/Button";
-import { useContact } from "../../../hooks/useContactPublic";
 import { toast } from "sonner";
 import Loading from "../loading";
+import { useContact } from "../../../hooks/usePublic";
 
 export default function ContactPage() {
   const { mutate: contact, isPending, error, isError } = useContact();
@@ -290,118 +290,7 @@ export default function ContactPage() {
       </div>
 
       {/* ================= CONTACT DETAILS SECTION ================= */}
-      <div className="max-w-5xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Other Ways to Reach Me
-          </h2>
-          <p className="text-white/60">
-            Choose your preferred method of communication
-          </p>
-        </div>
-
-        {/* Contact Methods Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {contactMethods.map((method, index) => (
-            <div key={index} className="group relative">
-              {method.href ? (
-                <a
-                  href={method.href}
-                  target={method.href.startsWith("http") ? "_blank" : undefined}
-                  rel={
-                    method.href.startsWith("http")
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
-                  className="block h-full"
-                >
-                  <div className="h-full p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/10">
-                    {/* linear Icon */}
-                    <div
-                      className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-linear-to-br ${method.color} text-white mb-4`}
-                    >
-                      {method.icon}
-                    </div>
-
-                    {/* Label */}
-                    <h3 className="text-white font-semibold text-lg mb-2">
-                      {method.label}
-                    </h3>
-
-                    {/* Value */}
-                    <p
-                      className={`text-sm text-white/70 transition-colors ${method.hoverColor} wrap-break-word`}
-                    >
-                      {method.value}
-                    </p>
-
-                    {/* Hover Arrow */}
-                    <div className="mt-4 flex items-center gap-2 text-white/40 group-hover:text-white/60 transition-colors">
-                      <span className="text-xs font-medium">Contact</span>
-                      <ArrowLeft className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                </a>
-              ) : (
-                <div className="h-full p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
-                  {/* linear Icon */}
-                  <div
-                    className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-linear-to-br ${method.color} text-white mb-4`}
-                  >
-                    {method.icon}
-                  </div>
-
-                  {/* Label */}
-                  <h3 className="text-white font-semibold text-lg mb-2">
-                    {method.label}
-                  </h3>
-
-                  {/* Value */}
-                  <p className="text-sm text-white/70 wrap-break-word">
-                    {method.value}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Info Banner */}
-        <div className="mt-12 p-6 rounded-2xl bg-linear-to-r from-purple-500/10 via-pink-500/10 to-indigo-500/10 border border-purple-500/20">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">⚡</div>
-              <div>
-                <h3 className="text-white font-semibold">
-                  Quick Response Time
-                </h3>
-                <p className="text-sm text-white/60">Usually within 24 hours</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">🌍</div>
-              <div>
-                <h3 className="text-white font-semibold">Available Globally</h3>
-                <p className="text-sm text-white/60">
-                  Remote collaborations welcome
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">💼</div>
-              <div>
-                <h3 className="text-white font-semibold">Open for Projects</h3>
-                <p className="text-sm text-white/60">
-                  Let{`'`}s build something amazing
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ContactMethods/>
     </main>
   );
 }
