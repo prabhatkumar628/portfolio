@@ -77,7 +77,6 @@ export async function POST(req: NextRequest) {
     if (!mimeMap[type].includes(file.type)) {
       throw new Error(`Invalid ${type} file`);
     }
-    console.log("Helloooooooooooooo");
 
     /* ---------- SIZE LIMIT ---------- */
     const sizeLimit: Record<UploadType, number> = {

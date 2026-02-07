@@ -39,7 +39,7 @@ export default function Footer() {
             </div>
 
             <p className="text-white/70 text-sm leading-relaxed max-w-md">
-             {settingsData && <>{settingsData.siteDescription}</>}
+             {settingsData && <>{settingsData.maintenanceMessage}</>}
             </p>
 
             {/* Status Badges */}

@@ -27,7 +27,11 @@ import { Cross, Loader } from "../../../(public)/(components)/Svg";
 import { useSettings } from "../../../../hooks/usePublic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldType, FileFolderType, UploadType } from "../../../../types/UploadType";
+import {
+  FieldType,
+  FileFolderType,
+  UploadType,
+} from "../../../../types/UploadType";
 import { useUpload } from "../../../../hooks/useUpload";
 import { toast } from "sonner";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
@@ -264,7 +268,7 @@ export default function SiteSettingsForm() {
                         }
                         className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                       >
-                        Upload Logo
+                        {uploadPending ? "Uploading..." : "Upload Logo"}
                       </Button>
                     </div>
                   </div>
@@ -314,7 +318,7 @@ export default function SiteSettingsForm() {
                         }
                         className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                       >
-                        Upload Favicon
+                        {uploadPending ? "Uploading..." : "Upload Favicon"}
                       </Button>
                     </div>
                   </div>
@@ -386,7 +390,7 @@ export default function SiteSettingsForm() {
                           }
                           className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                         >
-                          Upload Video
+                          {uploadPending ? "Uploading..." : "Upload Video"}
                         </Button>
                         <FormDescription className="text-white/40">
                           For screens wider than 768px
@@ -445,7 +449,7 @@ export default function SiteSettingsForm() {
                           }
                           className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                         >
-                          Upload Video
+                          {uploadPending ? "Uploading..." : "Upload Video"}
                         </Button>
                         <FormDescription className="text-white/40">
                           For mobile devices (smaller file size)
@@ -534,7 +538,7 @@ export default function SiteSettingsForm() {
                           }
                           className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                         >
-                          Upload Image
+                          {uploadPending ? "Uploading..." : "Upload Image"}
                         </Button>
                       </div>
                     </div>
