@@ -1,4 +1,5 @@
 import { ISettings } from "../models/settings.model";
+
 const settingsStatic: Partial<ISettings> = {
   key: "global",
   //site details
@@ -12,7 +13,7 @@ const settingsStatic: Partial<ISettings> = {
   siteVideoSm: "/images/home/bg.mp4",
   metaTitle: "",
   metaDescription: "",
-  metaKeywords: [""],
+  metaKeywords: ["portfoli"],
   ogImage: "/icons/android-chrome-512x512.png",
 
   googleAnalyticsId: "",
@@ -26,7 +27,7 @@ const settingsStatic: Partial<ISettings> = {
   },
 
   maintenanceMode: false,
-  maintenanceMessage: "",
+  maintenanceMessage: "Crafting digital experiences that inspire and innovate. Transforming ideas into elegant, high-performance web solutions.",
 
   //Personal Details
   fullName: "Prabhat Kumar",

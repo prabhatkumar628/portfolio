@@ -69,15 +69,17 @@ export default function AboutPage() {
               {settingsData && <>{settingsData.aboutSubTitle}</>}
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="/resume/prabat_kumar_2026.pdf" download>
-                <GradientButton
-                  gradient="purple"
-                  size="md"
-                  className="rounded-full"
-                >
-                  Download Resume
-                </GradientButton>
-              </a>
+              {settingsData?.resume && (
+                <a href={settingsData.resume} download>
+                  <GradientButton
+                    gradient="purple"
+                    size="md"
+                    className="rounded-full"
+                  >
+                    Download Resume
+                  </GradientButton>
+                </a>
+              )}
 
               <Link href={"/projects"}>
                 <GradientButton variant="outline">View Projects</GradientButton>

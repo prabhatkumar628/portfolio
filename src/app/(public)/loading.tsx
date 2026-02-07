@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xl">
+    <div className="fixed inset-0 z-51 flex items-center justify-center bg-black/60 backdrop-blur-xl">
       <div className="relative flex items-center justify-center">
         
         {/* soft glow */}

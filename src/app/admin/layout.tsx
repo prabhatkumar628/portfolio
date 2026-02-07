@@ -115,7 +115,7 @@ export default function AdminDashboard({
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {navigation.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname.startsWith(item.href) ;
             return (
               <Link
                 onClick={() => setSidebarOpen(false)}
@@ -212,7 +212,7 @@ export default function AdminDashboard({
         </header>
 
         {/* Main Content Area */}
-        <main className="p-6">{children}</main>
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

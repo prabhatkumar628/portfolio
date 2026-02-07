@@ -10,11 +10,15 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
   const videoRef2 = useRef<HTMLVideoElement | null>(null);
 
   const { data: settingsData, isLoading: settingsLoading } = useSettings();
-  // ✅ FINAL VIDEO SOURCES (API > STATIC)
   const videoSrc = useMemo(() => {
     return {
-      mobile: settingsData?.siteVideoSm || settingsStatic.siteVideoSm,
-      desktop: settingsData?.siteVideoLg || settingsStatic.siteVideoLg,
+      mobile: settingsData?.siteVideoSm?.trim()
+        ? settingsData.siteVideoSm
+        : settingsStatic.siteVideoSm,
+
+      desktop: settingsData?.siteVideoLg?.trim()
+        ? settingsData.siteVideoLg
+        : settingsStatic.siteVideoLg,
     };
   }, [settingsData]);
 
@@ -24,28 +28,56 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
       {/* ================= VIDEO BACKGROUND ================= */}
       <div className="absolute inset-0 z-0">
         {/* Mobile */}
-        <video
-          ref={videoRef1}
-          className="absolute inset-0 w-full h-full object-cover block md:hidden"
-          autoPlay
-          loop
-          muted
-          playsInline
-        >
-          <source src={videoSrc.mobile} type="video/mp4" />
-        </video>
+        {settingsData?.siteVideoSm && (
+          <video
+            ref={videoRef1}
+            className="absolute inset-0 w-full h-full object-cover block md:hidden"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={settingsData.siteVideoSm} type="video/mp4" />
+          </video>
+        )}
+        {!settingsData?.siteVideoSm && (
+          <video
+            ref={videoRef1}
+            className="absolute inset-0 w-full h-full object-cover block md:hidden"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={settingsStatic.siteVideoSm} type="video/mp4" />
+          </video>
+        )}
 
         {/* Desktop */}
-        <video
-          ref={videoRef2}
-          className="absolute inset-0 w-full h-full object-cover hidden md:block"
-          autoPlay
-          loop
-          muted
-          playsInline
-        >
-          <source src={videoSrc.desktop} type="video/mp4" />
-        </video>
+        {settingsData?.siteVideoLg && (
+          <video
+            ref={videoRef2}
+            className="absolute inset-0 w-full h-full object-cover hidden md:block"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={videoSrc.desktop} type="video/mp4" />
+          </video>
+        )}
+        {!settingsData?.siteVideoLg && (
+          <video
+            ref={videoRef2}
+            className="absolute inset-0 w-full h-full object-cover hidden md:block"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={settingsStatic.siteVideoLg} type="video/mp4" />
+          </video>
+        )}
       </div>
 
       {/* ================= GRID + GRADIENT OVERLAY ================= */}
