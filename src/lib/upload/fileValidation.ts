@@ -26,7 +26,7 @@ export const FILE_VALIDATION_RULES: Record<
 export const validateFile = (
   file: File,
   type: UploadType,
-): FileValidationResult => {
+) => {
   const rules = FILE_VALIDATION_RULES[type];
 
   if (!rules) {

@@ -2,13 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir, unlink, readdir } from "fs/promises";
 import fs from "fs";
 import path from "path";
-import {
-  FILE_FOLDERS,
-  FileFolderType,
-  ROOT_FOLDER,
-  UploadType,
-} from "../../../../types/UploadType";
+import { FileFolderType, UploadType } from "../../../../types/UploadType";
 import { getServerSession } from "next-auth";
+
+export const FILE_FOLDERS = [
+  "siteLogo",
+  "siteFavicon",
+  "heroImage",
+  "ogImage",
+  "siteVideoLg",
+  "siteVideoSm",
+  "resume",
+] as const;
+
+export const ROOT_FOLDER: Record<UploadType, string> = {
+  image: "images",
+  video: "videos",
+  document: "documents",
+};
 
 /* ---------- SAFE DELETE FILE ---------- */
 const deleteFileSafe = async (fileUrl: string) => {
