@@ -21,9 +21,9 @@ export const aboutSectionUpdateScheam = z.object({
     .min(1, "At least one aboutme is required")
     .max(10, "Maximum 10 aboutme allowed"),
 
-  projects: z.coerce.number().int().min(0),
-  client: z.coerce.number().int().min(0),
-  year_exp: z.coerce.number().int().min(0),
+  projects: z.coerce.number(),
+  client: z.coerce.number(),
+  year_exp: z.coerce.number(),
 });
 
 export type AboutSectionUpdateFormInputs = z.infer<

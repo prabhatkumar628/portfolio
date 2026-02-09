@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../../../../components/ui/form";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AboutSectionUpdateFormInputs,
@@ -33,8 +33,10 @@ export default function AboutSecton() {
   const { mutate: mutateSettings, isPending: settingsPending } =
     useSettingsUpdate();
 
-  const form = useForm({
-    resolver: zodResolver(aboutSectionUpdateScheam),
+  const form = useForm<AboutSectionUpdateFormInputs>({
+    resolver: zodResolver(
+      aboutSectionUpdateScheam,
+    ) as Resolver<AboutSectionUpdateFormInputs>,
     defaultValues: defaultAboutSection,
   });
 
@@ -62,7 +64,7 @@ export default function AboutSecton() {
     form.setValue("aboutMe", newAboutMeData);
   };
 
-   function onSubmit(values: AboutSectionUpdateFormInputs) {
+  function onSubmit(values: AboutSectionUpdateFormInputs) {
     mutateSettings(values, {
       onSuccess: (res) => {
         toast.success(res.message);
