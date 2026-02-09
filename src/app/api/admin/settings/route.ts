@@ -37,25 +37,25 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    if (validate.data.siteLogo) {
+    if (validate.data.siteLogo && oldSettings.siteLogo.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.siteLogo.public_id);
     }
-    if (validate.data.siteFavicon) {
+    if (validate.data.siteFavicon && oldSettings.siteFavicon.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.siteFavicon.public_id);
     }
-    if (validate.data.siteVideoLg) {
+    if (validate.data.siteVideoLg && oldSettings.siteVideoLg.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.siteVideoLg.public_id);
     }
-    if (validate.data.siteVideoSm) {
+    if (validate.data.siteVideoSm && oldSettings.siteVideoSm.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.siteVideoSm.public_id);
     }
-    if (validate.data.ogImage) {
+    if (validate.data.ogImage && oldSettings.ogImage.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.ogImage.public_id);
     }
-    if (validate.data.resume) {
+    if (validate.data.resume && oldSettings.resume.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.resume.public_id, "raw");
     }
-    if (validate.data.heroImage) {
+    if (validate.data.heroImage && oldSettings.heroImage.public_id !== "empty") {
       await deleteOnCloudinary(oldSettings.heroImage.public_id);
     }
 
