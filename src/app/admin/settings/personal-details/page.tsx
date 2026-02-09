@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 import {
-  personalDetailsSchema,
-  type PersonalDetailsFormValues,
   defaultPersonalDetails,
+  PersonalDetailsUpdateFormInputs,
+  personalDetailsUpdateSchema,
 } from "@/schemas/admin.settings.personal.details";
 
 import {
@@ -20,27 +20,27 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import GradientButton from "../../../(public)/(components)/Button";
-import { Loader } from "../../../(public)/(components)/Svg";
+import { Discord, Facebook, GitHub, Instagram, LinkedIn, Loader, Twitter, YouTube } from "../../../(public)/(components)/Svg";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  FieldType,
   FileFolderType,
+  UploadFieldType,
   UploadType,
 } from "../../../../types/UploadType";
-import { useUpload } from "../../../../hooks/useUpload";
 import { toast } from "sonner";
 import { useSettings } from "../../../../hooks/usePublic";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
+import { validateFile } from "../../../../lib/upload/fileValidation";
+import { useCloudinaryUpload } from "../../../../hooks/useCloudinaryUpload";
 
 export default function PersonalDetailsForm() {
-  const { mutate: mutateFile, isPending: uploadPending } = useUpload();
   const { data: settingsData } = useSettings();
   const { mutate: mutateSettings, isPending: settingsPending } =
     useSettingsUpdate();
 
-  const form = useForm<PersonalDetailsFormValues>({
-    resolver: zodResolver(personalDetailsSchema),
+  const form = useForm<PersonalDetailsUpdateFormInputs>({
+    resolver: zodResolver(personalDetailsUpdateSchema),
     defaultValues: defaultPersonalDetails,
   });
 
@@ -50,7 +50,7 @@ export default function PersonalDetailsForm() {
     }
   }, [settingsData, form]);
 
-  function onSubmit(values: PersonalDetailsFormValues) {
+  function onSubmit(values: PersonalDetailsUpdateFormInputs) {
     mutateSettings(values, {
       onSuccess: (res) => {
         toast.success(res.message);
@@ -62,47 +62,45 @@ export default function PersonalDetailsForm() {
     });
   }
 
+  const { uploadToCloudinary, isUploading, progress, progressKey } =
+    useCloudinaryUpload();
+
   const handleFileUpload = ({
     field,
     accept,
     type,
     folderName,
-    oldFile,
   }: {
-    field: FieldType;
+    field: UploadFieldType;
     accept: string;
     type: UploadType;
     folderName: FileFolderType;
-    oldFile?: string | null;
   }) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = accept;
 
     input.onchange = async (e: Event) => {
-      // ✅ Event instead of any
-      const target = e.target as HTMLInputElement; // ✅ Type assertion
-      const file = target.files?.[0]; // ✅ Optional chaining
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
 
       if (file) {
-        // Here you would upload to your storage (Cloudinary, S3, etc.)
-        // For now, just showing the file name
+        const validation = validateFile(file, type);
+        if (!validation.valid) {
+          toast.error(validation.message);
+          return;
+        }
+
         try {
-          mutateFile(
-            { file: file, type: type, folderName, oldFile },
-            {
-              onSuccess: (res) => {
-                field.onChange(res.url);
-                toast.success("File uploaded successfully!");
-              },
-              onError: (err) => {
-                toast.error("Upload failed: " + err.message);
-              },
-            },
-          );
+          const result = await uploadToCloudinary({
+            file,
+            type,
+            folderName,
+          });
+
+          field.onChange(result); // { url, public_id }
         } catch (error) {
           console.error("Upload error:", error);
-          toast.error("Failed to upload file");
         }
       }
     };
@@ -238,7 +236,7 @@ export default function PersonalDetailsForm() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-white truncate">
-                            {field.value.split("/").pop()}
+                            {field.value.url.split("---").pop()}
                           </p>
                           <p className="text-xs text-white/50">PDF Document</p>
                         </div>
@@ -246,7 +244,7 @@ export default function PersonalDetailsForm() {
                     )}
                     <Button
                       type="button"
-                      disabled={uploadPending}
+                      disabled={isUploading}
                       variant="outline"
                       size="sm"
                       onClick={() =>
@@ -255,12 +253,21 @@ export default function PersonalDetailsForm() {
                           accept: ".pdf",
                           type: "document",
                           folderName: "resume",
-                          oldFile: field.value,
                         })
                       }
-                      className="bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white shrink-0"
+                      className="relative overflow-hidden bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white shrink-0"
                     >
-                      {uploadPending ? "Uploading..." : "Upload PDF"}
+                      {isUploading && progressKey === "resume" && (
+                        <span
+                          className="absolute left-0 top-0 h-full bg-purple-500/40 transition-all"
+                          style={{ width: `${progress}%` }}
+                        />
+                      )}
+                      <span className="relative z-10">
+                        {isUploading && progressKey === "resume"
+                          ? `Uploading ${progress}%`
+                          : "Upload PDF"}
+                      </span>
                     </Button>
                   </div>
                   <FormDescription className="text-white/40">
@@ -316,7 +323,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">🐙</span> GitHub
+                     <GitHub className="w-5 h-5" /> GitHub
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -337,7 +344,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">💼</span> LinkedIn
+                      <LinkedIn className="w-4 h-4"/> LinkedIn
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -358,7 +365,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">🐦</span> Twitter/X
+                      <Twitter className="w-4 h-4"/> Twitter/X
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -379,7 +386,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">📸</span> Instagram
+                      <Instagram className="w-4 h-4"/> Instagram
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -400,7 +407,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">📹</span> YouTube
+                      <YouTube className="w-4 h-4"/> YouTube
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -421,7 +428,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">👥</span> Facebook
+                      <Facebook className="w-4 h-4"/> Facebook
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -442,7 +449,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <span className="text-lg">💬</span> Discord
+                      <Discord className="w-4 h-4"/>Discord
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -464,7 +471,7 @@ export default function PersonalDetailsForm() {
               className="rounded-xl w-full"
               variant="outline"
               type="submit"
-              disabled={settingsPending || uploadPending}
+              disabled={settingsPending || isUploading}
             >
               {settingsPending ? (
                 <>

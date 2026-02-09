@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
-  siteSettingsSchema,
-  type SiteSettingsFormValues,
   defaultSiteSettings,
+  SiteSettingsUpdateFormInput,
+  siteSettingsUpdateSchema,
 } from "@/schemas/admin.settings.site.settings";
-
 import {
   Form,
   FormControl,
@@ -28,13 +27,14 @@ import { useSettings } from "../../../../hooks/usePublic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  FieldType,
   FileFolderType,
+  UploadFieldType,
   UploadType,
 } from "../../../../types/UploadType";
-import { useUpload } from "../../../../hooks/useUpload";
 import { toast } from "sonner";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
+import { useCloudinaryUpload } from "../../../../hooks/useCloudinaryUpload";
+import { validateFile } from "../../../../lib/upload/fileValidation";
 
 export default function SiteSettingsForm() {
   const [keywords, setKeywords] = useState<string[]>(
@@ -42,12 +42,11 @@ export default function SiteSettingsForm() {
   );
   const [keywordInput, setKeywordInput] = useState("");
   const { data: settingsData } = useSettings();
-  const { mutate: mutateFile, isPending: uploadPending } = useUpload();
   const { mutate: mutateSettings, isPending: settingsPending } =
     useSettingsUpdate();
 
-  const form = useForm<SiteSettingsFormValues>({
-    resolver: zodResolver(siteSettingsSchema),
+  const form = useForm<SiteSettingsUpdateFormInput>({
+    resolver: zodResolver(siteSettingsUpdateSchema),
     defaultValues: defaultSiteSettings,
   });
 
@@ -59,7 +58,7 @@ export default function SiteSettingsForm() {
     }
   }, [settingsData, form]);
 
-  function onSubmit(values: SiteSettingsFormValues) {
+  function onSubmit(values: SiteSettingsUpdateFormInput) {
     mutateSettings(values, {
       onSuccess: (res) => {
         toast.success(res.message);
@@ -86,47 +85,45 @@ export default function SiteSettingsForm() {
     form.setValue("metaKeywords", newKeywords);
   };
 
+  const { uploadToCloudinary, isUploading, progress, progressKey } =
+    useCloudinaryUpload();
+
   const handleFileUpload = ({
     field,
     accept,
     type,
     folderName,
-    oldFile,
   }: {
-    field: FieldType;
+    field: UploadFieldType;
     accept: string;
     type: UploadType;
     folderName: FileFolderType;
-    oldFile?: string | null;
   }) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = accept;
 
     input.onchange = async (e: Event) => {
-      // ✅ Event instead of any
-      const target = e.target as HTMLInputElement; // ✅ Type assertion
-      const file = target.files?.[0]; // ✅ Optional chaining
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
 
       if (file) {
-        // Here you would upload to your storage (Cloudinary, S3, etc.)
-        // For now, just showing the file name
+        const validation = validateFile(file, type);
+        if (!validation.valid) {
+          toast.error(validation.message);
+          return;
+        }
+
         try {
-          mutateFile(
-            { file: file, type: type, folderName, oldFile },
-            {
-              onSuccess: (res) => {
-                field.onChange(res.url);
-                toast.success("File uploaded successfully!");
-              },
-              onError: (err) => {
-                toast.error("Upload failed: " + err.message);
-              },
-            },
-          );
+          const result = await uploadToCloudinary({
+            file,
+            type,
+            folderName,
+          });
+
+          field.onChange(result); // { url, public_id }
         } catch (error) {
           console.error("Upload error:", error);
-          toast.error("Failed to upload file");
         }
       }
     };
@@ -225,110 +222,121 @@ export default function SiteSettingsForm() {
               )}
             />
 
-            {/* Site Logo */}
-            <FormField
-              control={form.control}
-              name="siteLogo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white/80">Site Logo *</FormLabel>
-                  <div className="flex items-center gap-4">
-                    {field.value && (
-                      <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
-                        <Image
-                          src={field.value}
-                          alt="Site Logo"
-                          width={80}
-                          height={80}
-                          className="w-full h-full object-cover"
-                        />
+            <div className="grid grid-cols-2 gap-4 sm:gap-6">
+              {/* Site Logo */}
+              <FormField
+                control={form.control}
+                name="siteLogo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white/80">Site Logo *</FormLabel>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                      {field.value && (
+                        <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+                          <Image
+                            src={field.value.url}
+                            alt="Site Logo"
+                            width={80}
+                            height={80}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <Button
+                          type="button"
+                          disabled={isUploading}
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleFileUpload({
+                              field,
+                              accept: "image/*",
+                              type: "image",
+                              folderName: "siteLogo",
+                            })
+                          }
+                          className="relative overflow-hidden bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
+                        >
+                          {isUploading && progressKey === "siteLogo" && (
+                            <span
+                              className="absolute left-0 top-0 h-full bg-purple-500/40 transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          )}
+                          <span className="relative z-10">
+                            {isUploading && progressKey === "siteLogo"
+                              ? `Uploading ${progress}%`
+                              : "Upload Logo"}
+                          </span>
+                        </Button>
                       </div>
-                    )}
-                    <div className="flex-1">
-                      <FormControl>
-                        <Input
-                          placeholder="/images/logo.png"
-                          {...field}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
-                        />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        disabled={uploadPending}
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          handleFileUpload({
-                            field,
-                            accept: "image/*",
-                            type: "image",
-                            folderName: "siteLogo",
-                            oldFile: field.value,
-                          })
-                        }
-                        className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
-                      >
-                        {uploadPending ? "Uploading..." : "Upload Logo"}
-                      </Button>
                     </div>
-                  </div>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
+                    <FormDescription className="text-white/40">
+                      Recommended size: 512x512px PNG
+                    </FormDescription>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
 
-            {/* Site Favicon */}
-            <FormField
-              control={form.control}
-              name="siteFavicon"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white/80">Favicon *</FormLabel>
-                  <div className="flex items-center gap-4">
-                    {field.value && (
-                      <div className="w-16 h-16 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
-                        <Image
-                          src={field.value}
-                          alt="Favicon"
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                        />
+              {/* Site Favicon */}
+              <FormField
+                control={form.control}
+                name="siteFavicon"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white/80">Favicon *</FormLabel>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                      {field.value && (
+                        <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+                          <Image
+                            src={field.value.url}
+                            alt="Favicon"
+                            width={80}
+                            height={80}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <Button
+                          type="button"
+                          disabled={isUploading}
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleFileUpload({
+                              field,
+                              accept: ".png,.ico,.svg",
+                              type: "image",
+                              folderName: "siteFavicon",
+                            })
+                          }
+                          className="relative overflow-hidden bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
+                        >
+                          {isUploading && progressKey === "siteFavicon" && (
+                            <span
+                              className="absolute left-0 top-0 h-full bg-purple-500/40 transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          )}
+                          <span className="relative z-10">
+                            {isUploading && progressKey === "siteFavicon"
+                              ? `Uploading ${progress}%`
+                              : "Upload Logo"}
+                          </span>
+                        </Button>
                       </div>
-                    )}
-                    <div className="flex-1">
-                      <FormControl>
-                        <Input
-                          placeholder="/icons/favicon.png"
-                          {...field}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
-                        />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          handleFileUpload({
-                            field,
-                            accept: ".png,.ico,.svg",
-                            type: "image",
-                            folderName: "siteFavicon",
-                          })
-                        }
-                        className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
-                      >
-                        {uploadPending ? "Uploading..." : "Upload Favicon"}
-                      </Button>
                     </div>
-                  </div>
-                  <FormDescription className="text-white/40">
-                    Recommended size: 192x192px or 512x512px PNG
-                  </FormDescription>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
+                    <FormDescription className="text-white/40">
+                      Recommended size: 192x192px or 512x512px PNG
+                    </FormDescription>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
           {/* Video Backgrounds Section */}
@@ -342,7 +350,7 @@ export default function SiteSettingsForm() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6">
               {/* Large Screen Video */}
               <FormField
                 control={form.control}
@@ -352,32 +360,26 @@ export default function SiteSettingsForm() {
                     <FormLabel className="text-white/80">
                       Desktop Video
                     </FormLabel>
-                    <div className="flex gap-4 mt-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-1">
                       {field.value && (
-                        <div className="w-16 h-19 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
+                        <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
                           <video
-                            key={field.value} // 🔥 THIS IS THE FIX
+                            key={field.value.url} // 🔥 THIS IS THE FIX
                             className="w-full h-full object-cover"
                             autoPlay
                             loop
                             muted
                             playsInline
                           >
-                            <source src={field.value} type="video/mp4" />
+                            <source src={field.value.url} type="video/mp4" />
                           </video>
                         </div>
                       )}
 
                       <div className="flex-1">
-                        <FormControl>
-                          <Input
-                            placeholder="/videos/background-lg.mp4"
-                            {...field}
-                            className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
-                          />
-                        </FormControl>
                         <Button
                           type="button"
+                          disabled={isUploading}
                           variant="outline"
                           size="sm"
                           onClick={() =>
@@ -388,16 +390,26 @@ export default function SiteSettingsForm() {
                               folderName: "siteVideoLg",
                             })
                           }
-                          className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
+                          className="relative overflow-hidden bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                         >
-                          {uploadPending ? "Uploading..." : "Upload Video"}
+                          {isUploading && progressKey === "siteVideoLg" && (
+                            <span
+                              className="absolute left-0 top-0 h-full bg-purple-500/40 transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          )}
+                          <span className="relative z-10">
+                            {isUploading && progressKey === "siteVideoLg"
+                              ? `Uploading ${progress}%`
+                              : "Upload Logo"}
+                          </span>
                         </Button>
-                        <FormDescription className="text-white/40">
-                          For screens wider than 768px
-                        </FormDescription>
-                        <FormMessage className="text-red-400" />
                       </div>
                     </div>
+                    <FormDescription className="text-white/40">
+                      For screens wider than 768px
+                    </FormDescription>
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -411,32 +423,26 @@ export default function SiteSettingsForm() {
                     <FormLabel className="text-white/80">
                       Mobile Video
                     </FormLabel>
-                    <div className="flex gap-4 mt-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-1">
                       {field.value && (
-                        <div className="w-16 h-19 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
+                        <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
                           <video
-                            key={field.value} // 🔥 THIS IS THE FIX
+                            key={field.value.url} // 🔥 THIS IS THE FIX
                             className="w-full h-full object-cover"
                             autoPlay
                             loop
                             muted
                             playsInline
                           >
-                            <source src={field.value} type="video/mp4" />
+                            <source src={field.value.url} type="video/mp4" />
                           </video>
                         </div>
                       )}
 
                       <div className="flex-1">
-                        <FormControl>
-                          <Input
-                            placeholder="/videos/background-sm.mp4"
-                            {...field}
-                            className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
-                          />
-                        </FormControl>
                         <Button
                           type="button"
+                          disabled={isUploading}
                           variant="outline"
                           size="sm"
                           onClick={() =>
@@ -447,16 +453,26 @@ export default function SiteSettingsForm() {
                               folderName: "siteVideoSm",
                             })
                           }
-                          className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
+                          className="relative overflow-hidden bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                         >
-                          {uploadPending ? "Uploading..." : "Upload Video"}
+                          {isUploading && progressKey === "siteVideoSm" && (
+                            <span
+                              className="absolute left-0 top-0 h-full bg-purple-500/40 transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          )}
+                          <span className="relative z-10">
+                            {isUploading && progressKey === "siteVideoSm"
+                              ? `Uploading ${progress}%`
+                              : "Upload Logo"}
+                          </span>
                         </Button>
-                        <FormDescription className="text-white/40">
-                          For mobile devices (smaller file size)
-                        </FormDescription>
-                        <FormMessage className="text-red-400" />
                       </div>
                     </div>
+                    <FormDescription className="text-white/40">
+                      For mobile devices (smaller file size)
+                    </FormDescription>
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -508,7 +524,7 @@ export default function SiteSettingsForm() {
                       {field.value && (
                         <div className="w-20 h-20 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
                           <Image
-                            src={field.value}
+                            src={field.value.url}
                             alt="OG Image"
                             width={80}
                             height={80}
@@ -517,15 +533,9 @@ export default function SiteSettingsForm() {
                         </div>
                       )}
                       <div className="flex-1">
-                        <FormControl>
-                          <Input
-                            placeholder="/images/og-image.png"
-                            {...field}
-                            className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
-                          />
-                        </FormControl>
                         <Button
                           type="button"
+                          disabled={isUploading}
                           variant="outline"
                           size="sm"
                           onClick={() =>
@@ -536,9 +546,19 @@ export default function SiteSettingsForm() {
                               folderName: "ogImage",
                             })
                           }
-                          className="mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
+                          className="relative mt-2 bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
                         >
-                          {uploadPending ? "Uploading..." : "Upload Image"}
+                          {isUploading && progressKey === "ogImage" && (
+                            <span
+                              className="absolute left-0 top-0 h-full bg-purple-500/40 transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          )}
+                          <span className="relative z-10">
+                            {isUploading && progressKey === "ogImage"
+                              ? `Uploading ${progress}%`
+                              : "Upload Logo"}
+                          </span>
                         </Button>
                       </div>
                     </div>
@@ -867,7 +887,7 @@ export default function SiteSettingsForm() {
               className="rounded-xl w-full"
               variant="outline"
               type="submit"
-              disabled={settingsPending || uploadPending}
+              disabled={settingsPending || isUploading}
             >
               {settingsPending ? (
                 <>

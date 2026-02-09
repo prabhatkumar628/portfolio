@@ -24,7 +24,7 @@ export default function Navbar() {
               <div className="relative h-full w-full overflow-hidden rounded-full bg-black">
                 {settingsData && (
                   <Image
-                    src={settingsData.siteLogo}
+                    src={settingsData.siteLogo.url}
                     alt="logo"
                     fill
                     className="object-cover"

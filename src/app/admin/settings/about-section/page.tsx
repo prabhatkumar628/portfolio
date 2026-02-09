@@ -1,286 +1,321 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../../../components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AboutSectionUpdateFormInputs,
+  aboutSectionUpdateScheam,
+  defaultAboutSection,
+} from "../../../../schemas/admin.settings.about.section";
+import { Input } from "../../../../components/ui/input";
+import { Textarea } from "../../../../components/ui/textarea";
+import { useSettings } from "../../../../hooks/usePublic";
+import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
+import { Button } from "../../../../components/ui/button";
+import { Cross, Loader } from "../../../(public)/(components)/Svg";
+import GradientButton from "../../../(public)/(components)/Button";
+import { toast } from "sonner";
 
 export default function AboutSecton() {
-    const [aboutSection, setAboutSection] = useState({
-    aboutTitle: "About Me",
-    aboutDescription: "I'm a passionate developer who loves creating innovative solutions...",
-    aboutImage: "",
-    yearsOfExperience: "5",
-    projectsCompleted: "50+",
-    happyClients: "30+",
-    awardsWon: "10+",
-    skillsTitle: "My Skills",
-    skillsDescription: "Technologies I work with",
-    servicesTitle: "What I Do",
-    servicesDescription: "Services I offer to clients",
+  const [aboutMeInput, setAboutMeInput] = useState("");
+
+  const { data: settingsData } = useSettings();
+  const { mutate: mutateSettings, isPending: settingsPending } =
+    useSettingsUpdate();
+
+  const form = useForm({
+    resolver: zodResolver(aboutSectionUpdateScheam),
+    defaultValues: defaultAboutSection,
   });
 
+  useEffect(() => {
+    if (settingsData) {
+      form.reset(settingsData);
+    }
+  }, [settingsData, form]);
 
-   const [saveLoading, setSaveLoading] = useState(false);
-    const handleSave = async () => {
-      setSaveLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setSaveLoading(false);
-      alert("Settings saved successfully!");
-    };
-  
-    const handleImageUpload = (section: string, field: string) => {
-      // Handle image upload logic
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = (e: any) => {
-        const file = e.target.files[0];
-        if (file) {
-          // Upload logic here
-          console.log("Upload:", file.name);
-          alert(`Image upload functionality for ${field}`);
-        }
-      };
-      input.click();
-    };
-  
+  const handleAddAboutMe = () => {
+    const currentAboutMeData = form.getValues("aboutMe");
+    if (
+      aboutMeInput.trim() &&
+      !currentAboutMeData.includes(aboutMeInput.trim())
+    ) {
+      const newAboutMeData = [...currentAboutMeData, aboutMeInput.trim()];
+      form.setValue("aboutMe", newAboutMeData);
+      setAboutMeInput("");
+    }
+  };
 
+  const handleRemoveAboutMe = (aboutMe: string) => {
+    const currentAboutMeData = form.getValues("aboutMe");
+    const newAboutMeData = currentAboutMeData.filter((me) => me !== aboutMe);
+    form.setValue("aboutMe", newAboutMeData);
+  };
 
-
+   function onSubmit(values: AboutSectionUpdateFormInputs) {
+    mutateSettings(values, {
+      onSuccess: (res) => {
+        toast.success(res.message);
+        form.reset(values); // reset form with current values
+      },
+      onError: (err) => {
+        toast.error(err.message || "Failed to save settings");
+      },
+    });
+  }
 
   return (
-    <div className="space-y-6">
-            <div className="border-b border-white/10 pb-4">
-              <h2 className="text-2xl font-bold text-white mb-2">
-                📝 About Section
+    <div className="space-y-4 sm:space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-2">About Section</h1>
+        <p className="text-white/60">Configure your about page content</p>
+      </div>
+
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 sm:space-y-8"
+        >
+          <div className="p-4 sm:p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl space-y-4 sm:space-y-6">
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">
+                About Content
               </h2>
-              <p className="text-white/60">Configure your about page content</p>
+              <p className="text-sm text-white/60">
+                Main headline and subtitle
+              </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* About Title */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-white/70 mb-2">
-                  Section Title
-                </label>
-                <input
-                  type="text"
-                  value={aboutSection.aboutTitle}
-                  onChange={(e) =>
-                    setAboutSection({
-                      ...aboutSection,
-                      aboutTitle: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                  placeholder="About Me"
-                />
-              </div>
+            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+              <FormField
+                control={form.control}
+                name="aboutTitle"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel className="text-white/80">
+                      About Title *
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Software Engineer"
+                        {...field}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
 
-              {/* About Description */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-white/70 mb-2">
-                  Description
-                </label>
-                <textarea
-                  rows={5}
-                  value={aboutSection.aboutDescription}
-                  onChange={(e) =>
-                    setAboutSection({
-                      ...aboutSection,
-                      aboutDescription: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors resize-none"
-                  placeholder="Tell your story..."
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="aboutSubTitle"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel className="text-white/80">
+                      About Subtitle *
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Building modern web experiences..."
+                        {...field}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            {/* Stats/Achievements */}
-            <div className="border-t border-white/10 pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Stats & Achievements
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Years Experience
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.yearsOfExperience}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        yearsOfExperience: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="5"
-                  />
-                </div>
+            <FormField
+              control={form.control}
+              name="aboutDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/80">
+                    Site Description *
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Brief description of your website..."
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 resize-none min-h-25"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
 
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Projects Done
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.projectsCompleted}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        projectsCompleted: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="50+"
-                  />
-                </div>
+            <FormField
+              control={form.control}
+              name="aboutMe"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/80">
+                    About Me * (Max 10)
+                  </FormLabel>
+                  <div className="space-y-3">
+                    <div className="flex gap-2 relative">
+                      <Textarea
+                        placeholder="Briefly describe yourself or your website…"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 resize-none min-h-25"
+                        value={aboutMeInput}
+                        onChange={(e) => setAboutMeInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddAboutMe();
+                          }
+                        }}
+                      />
 
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Happy Clients
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.happyClients}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        happyClients: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="30+"
-                  />
-                </div>
+                      <Button
+                        type="button"
+                        onClick={handleAddAboutMe}
+                        disabled={field.value.length >= 10}
+                        className="absolute bottom-2 right-2 bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30"
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      {field.value.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10"
+                        >
+                          <span
+                            className={`flex-1 font-semibold text-white/40`}
+                          >
+                            {item}
+                          </span>
 
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Awards Won
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.awardsWon}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        awardsWon: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="10+"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Skills Section Settings */}
-            <div className="border-t border-white/10 pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Skills Section
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Skills Section Title
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.skillsTitle}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        skillsTitle: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="My Skills"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Skills Description
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.skillsDescription}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        skillsDescription: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="Technologies I work with"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Services Section Settings */}
-            <div className="border-t border-white/10 pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Services Section
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Services Section Title
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.servicesTitle}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        servicesTitle: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="What I Do"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Services Description
-                  </label>
-                  <input
-                    type="text"
-                    value={aboutSection.servicesDescription}
-                    onChange={(e) =>
-                      setAboutSection({
-                        ...aboutSection,
-                        servicesDescription: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none transition-colors"
-                    placeholder="Services I offer to clients"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* About Image */}
-            <div className="border-t border-white/10 pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                About Image
-              </h3>
-              <div className="max-w-md">
-                <div className="aspect-square rounded-2xl bg-linear-to-br from-purple-500/10 to-pink-500/10 border border-white/10 flex items-center justify-center mb-3">
-                  <span className="text-8xl">🧑‍💼</span>
-                </div>
-                <button
-                  onClick={() => handleImageUpload("about", "image")}
-                  className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 hover:text-white transition-all text-sm"
-                >
-                  Upload About Image
-                </button>
-              </div>
-            </div>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAboutMe(item)}
+                            className="text-white/60 hover:text-white"
+                          >
+                            <Cross className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
           </div>
-  )
+
+          <div className="p-4 sm:p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl space-y-4 sm:space-y-6">
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">
+                Stats & Achievements
+              </h2>
+              {/* <p className="text-sm text-white/60">
+                Main headline and subtitle
+              </p> */}
+            </div>
+
+            {/* 
+5
+
+50+
+ */}
+            <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+              <FormField
+                control={form.control}
+                name="projects"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel className="text-white/80">
+                      Projects Done
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Software Engineer"
+                        {...field}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="year_exp"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel className="text-white/80">
+                      Years Experience
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Software Engineer"
+                        {...field}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="client"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel className="text-white/80">
+                      Happy Clients
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Software Engineer"
+                        {...field}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Submit Button */}
+          </div>
+
+          <div>
+            <GradientButton
+              className="rounded-xl w-full"
+              variant="outline"
+              type="submit"
+              disabled={settingsPending}
+            >
+              {settingsPending ? (
+                <>
+                  <Loader className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                  Saving Changes...
+                </>
+              ) : (
+                "Save About Section"
+              )}
+            </GradientButton>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
 }

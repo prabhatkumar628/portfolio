@@ -19,13 +19,15 @@ export default function Footer() {
               <div className="relative group">
                 <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-r from-purple-500 to-indigo-500 p-1">
                   <div className="relative h-full w-full overflow-hidden rounded-full bg-black">
-                    <Image
-                      src="/images/home/avatar/pra.webp"
-                      alt="Prabhat"
-                      fill
-                      className="object-cover"
-                      priority
-                    />
+                    {settingsData && (
+                      <Image
+                        src={settingsData.siteLogo.url}
+                        alt="Prabhat"
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -39,7 +41,7 @@ export default function Footer() {
             </div>
 
             <p className="text-white/70 text-sm leading-relaxed max-w-md">
-             {settingsData && <>{settingsData.maintenanceMessage}</>}
+              {settingsData && <>{settingsData.maintenanceMessage}</>}
             </p>
 
             {/* Status Badges */}

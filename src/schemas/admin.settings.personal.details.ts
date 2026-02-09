@@ -2,7 +2,12 @@
 
 import { z } from "zod";
 
-export const personalDetailsSchema = z.object({
+const mediaFileSchema = z.object({
+  url: z.string().min(1, "URL is required"),
+  public_id: z.string().optional(),
+});
+
+export const personalDetailsUpdateSchema = z.object({
   // Basic Info
   fullName: z
     .string()
@@ -25,10 +30,7 @@ export const personalDetailsSchema = z.object({
     .max(200, "Location must be less than 200 characters"),
 
   // Resume
-  resume: z
-    .string()
-    .min(1, "Resume is required")
-    .regex(/\.(pdf)$/i, "Must be a PDF file"),
+  resume: mediaFileSchema,
 
   // Availability
   isAvailableForHire: z.boolean(),
@@ -79,14 +81,14 @@ export const personalDetailsSchema = z.object({
   }),
 });
 
-export type PersonalDetailsFormValues = z.infer<typeof personalDetailsSchema>;
+export type PersonalDetailsUpdateFormInputs = z.infer<typeof personalDetailsUpdateSchema>;
 
 // Default values for the form
-export const defaultPersonalDetails: PersonalDetailsFormValues = {
+export const defaultPersonalDetails = {
   fullName: "Prabhat Kumar",
   email: "kprabhat628@gmail.com",
   phone: "8294925485",
-  resume: "/resume/prabat_kumar_2026.pdf",
+  resume: { url: "/resume/prabat_kumar_2026.pdf", public_id: "empty" },
   isAvailableForHire: true,
   location: "Noida Sec-71",
   socialLinks: {

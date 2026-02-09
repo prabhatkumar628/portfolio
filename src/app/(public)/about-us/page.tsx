@@ -9,11 +9,35 @@ import {
 import { IExperience } from "../../../models/experience.model";
 import Link from "next/link";
 import SocialLinks from "../(components)/SocialLinks";
+// import { getCloudinaryDownloadUrl } from "../../../lib/upload/cloudinary";
 
 export default function AboutPage() {
   const { data: skillData } = useSkills();
   const { data: experienceData } = useExperience();
   const { data: settingsData } = useSettings();
+
+  // let downloadUrl;
+  // if (settingsData) {
+  //   downloadUrl = settingsData.resume.url.replace(
+  //     "/upload/",
+  //     "/upload/fl_attachment/",
+  //   );
+  // }
+
+  const downloadUrl = settingsData?.resume?.url
+  ? getCloudinaryDownloadUrl(settingsData.resume.url)
+  : null;
+
+  // lib/cloudinary.ts
+   function getCloudinaryDownloadUrl(url: string): string {
+    if (!url) return "";
+
+    const parts = url.split("/upload/");
+    if (parts.length !== 2) return url;
+
+    // Add fl_attachment to force download
+    return `${parts[0]}/upload/fl_attachment/${parts[1]}`;
+  }
 
   return (
     <main className="mx-auto max-w-7xl p-4 py-12">
@@ -27,9 +51,9 @@ export default function AboutPage() {
               <div className="absolute -inset-1 bg-linear-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-3xl blur-2xl opacity-25 group-hover:opacity-40 transition duration-500"></div>
               <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-xl p-2">
                 <div className="relative aspect-square rounded-2xl overflow-hidden">
-                  {settingsData && (
+                  {settingsData?.heroImage.url && (
                     <Image
-                      src={settingsData.heroImage}
+                      src={settingsData.heroImage.url}
                       alt="Prabhat"
                       fill
                       className="object-cover"
@@ -57,20 +81,22 @@ export default function AboutPage() {
               👋 Hello, I{`'`}m
             </GradientButtonSoft>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {settingsData && <>{settingsData.fullName}</>}
+              {settingsData?.fullName && <>{settingsData.fullName}</>}
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold bg-linear-to-r from-purple-400 via-pink-500 to-indigo-400 bg-clip-text text-transparent mb-6">
-              {settingsData && <>{settingsData.aboutTitle}</>}
+              {settingsData?.aboutTitle && <>{settingsData.aboutTitle}</>}
             </h2>
             <p className="text-lg text-white/70 leading-relaxed mb-6">
-              {settingsData && <>{settingsData.aboutDescription}</>}
+              {settingsData?.aboutDescription && (
+                <>{settingsData.aboutDescription}</>
+              )}
             </p>
             <p className="text-white/60 leading-relaxed mb-8">
-              {settingsData && <>{settingsData.aboutSubTitle}</>}
+              {settingsData?.aboutSubTitle && <>{settingsData.aboutSubTitle}</>}
             </p>
             <div className="flex flex-wrap gap-4">
-              {settingsData?.resume && (
-                <a href={settingsData.resume} download>
+              {settingsData?.resume && downloadUrl && (
+                <a href={downloadUrl} target="_blank">
                   <GradientButton
                     gradient="purple"
                     size="md"

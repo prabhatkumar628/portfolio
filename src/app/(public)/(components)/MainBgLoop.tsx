@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useMemo, useRef } from "react";
+import React, { ReactNode, useRef } from "react";
 import { useSettings } from "../../../hooks/usePublic";
 import Loading from "../loading";
 import settingsStatic from "../../../data/settings.static";
@@ -10,17 +10,6 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
   const videoRef2 = useRef<HTMLVideoElement | null>(null);
 
   const { data: settingsData, isLoading: settingsLoading } = useSettings();
-  const videoSrc = useMemo(() => {
-    return {
-      mobile: settingsData?.siteVideoSm?.trim()
-        ? settingsData.siteVideoSm
-        : settingsStatic.siteVideoSm,
-
-      desktop: settingsData?.siteVideoLg?.trim()
-        ? settingsData.siteVideoLg
-        : settingsStatic.siteVideoLg,
-    };
-  }, [settingsData]);
 
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -37,7 +26,7 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
             muted
             playsInline
           >
-            <source src={settingsData.siteVideoSm} type="video/mp4" />
+            <source src={settingsData.siteVideoSm.url} type="video/mp4" />
           </video>
         )}
         {!settingsData?.siteVideoSm && (
@@ -49,7 +38,7 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
             muted
             playsInline
           >
-            <source src={settingsStatic.siteVideoSm} type="video/mp4" />
+            <source src={settingsStatic.siteVideoSm?.url} type="video/mp4" />
           </video>
         )}
 
@@ -63,7 +52,7 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
             muted
             playsInline
           >
-            <source src={videoSrc.desktop} type="video/mp4" />
+            <source src={settingsData.siteVideoLg.url} type="video/mp4" />
           </video>
         )}
         {!settingsData?.siteVideoLg && (
@@ -75,7 +64,7 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
             muted
             playsInline
           >
-            <source src={settingsStatic.siteVideoLg} type="video/mp4" />
+            <source src={settingsStatic.siteVideoLg?.url} type="video/mp4" />
           </video>
         )}
       </div>

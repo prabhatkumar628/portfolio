@@ -19,12 +19,12 @@ export default function Hero() {
           <h1 className="text-4xl md:text-5xl xl:text-6xl font-bold leading-tight">
             <span className="block text-white/90 mb-2">I{`'`}m a</span>
             <span className="block bg-linear-to-r from-purple-400 via-pink-500 to-indigo-400 bg-clip-text text-transparent animate-gradient bg-size-[200%_auto]">
-              {settingsData && <>{settingsData.heroTitle}</>}
+              {settingsData?.heroTitle && <>{settingsData.heroTitle}</>}
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-white/70 max-w-2xl">
-            {settingsData && <>{settingsData.heroSubtitle}</>}
+            {settingsData?.heroSubtitle && <>{settingsData.heroSubtitle}</>}
           </p>
         </div>
 
@@ -45,9 +45,9 @@ export default function Hero() {
             <div className="relative flex h-48 w-48 md:h-56 md:w-56 items-center justify-center rounded-full bg-linear-to-r from-purple-500 via-pink-500 to-indigo-500 p-1 transition-all duration-300">
               {/* Black Background with Image */}
               <div className="relative h-full w-full overflow-hidden rounded-full bg-black ring-2 ring-white/10 group-hover:ring-white/20 transition-all">
-                {settingsData && (
+                {settingsData?.heroImage.url && (
                   <Image
-                    src={settingsData.heroImage}
+                    src={settingsData.heroImage.url}
                     alt="Prabhat"
                     fill
                     className="object-cover rounded-full group-hover:scale-110 transition-transform duration-700"
@@ -62,7 +62,7 @@ export default function Hero() {
         {/* ========== DESCRIPTION ========== */}
         <div className="max-w-2xl text-center space-y-4 mt-6">
           <p className="text-base md:text-lg text-white/70 leading-relaxed">
-            {settingsData &&
+            {settingsData?.heroDescription &&
               settingsData.heroDescription.map((item, index) =>
                 item.highlight ? (
                   <span
@@ -87,7 +87,7 @@ export default function Hero() {
 
           {/* Tech Stack Pills */}
           <div className="flex flex-wrap justify-center gap-2 pt-2">
-            {settingsData &&
+            {settingsData?.heroSkills &&
               settingsData.heroSkills.map((tech) => (
                 <span
                   key={tech}
@@ -101,7 +101,7 @@ export default function Hero() {
 
         {/* ========== CTA BUTTONS ========== */}
         <div className="flex flex-wrap gap-4 justify-center pt-4">
-          {settingsData && (
+          {settingsData?.heroCTA.primary && (
             <Link href={settingsData.heroCTA.primary.link}>
               <GradientButton gradient="purple" className="relative">
                 <span className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export default function Hero() {
               </GradientButton>
             </Link>
           )}
-          {settingsData && (
+          {settingsData?.heroCTA.secondary && (
             <Link href={settingsData.heroCTA.secondary.link}>
               <GradientButton variant="gray" className="group">
                 <span className="flex items-center gap-2">
@@ -127,7 +127,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-linear-to-r from-purple-500/10 to-pink-500/10 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
             <div className="relative text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all">
               <p className="text-3xl md:text-4xl font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {settingsData && <>{settingsData.projects}+</>}
+                {settingsData?.projects && <>{settingsData.projects}+</>}
               </p>
               <p className="text-xs md:text-sm text-white/60 mt-1">Projects</p>
             </div>
@@ -137,7 +137,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-linear-to-r from-pink-500/10 to-indigo-500/10 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
             <div className="relative text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all">
               <p className="text-3xl md:text-4xl font-bold bg-linear-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">
-                {settingsData && <>{settingsData.year_exp}+</>}
+                {settingsData?.year_exp && <>{settingsData.year_exp}+</>}
               </p>
               <p className="text-xs md:text-sm text-white/60 mt-1">Years Exp</p>
             </div>
@@ -147,7 +147,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-linear-to-r from-indigo-500/10 to-purple-500/10 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
             <div className="relative text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all">
               <p className="text-3xl md:text-4xl font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                {settingsData && <>{settingsData.client}+</>}
+                {settingsData?.client && <>{settingsData.client}+</>}
               </p>
               <p className="text-xs md:text-sm text-white/60 mt-1">Clients</p>
             </div>

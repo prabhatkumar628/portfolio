@@ -5,17 +5,17 @@ export interface ISettings {
   //site details
   key: string;
   siteName: string;
-  siteLogo: string;
-  siteFavicon: string;
+  siteLogo: { url: string; public_id: string };
+  siteFavicon: { url: string; public_id: string };
   siteTitle: string;
   siteDescription: string;
-  siteVideoLg: string;
-  siteVideoSm: string;
+  siteVideoLg: { url: string; public_id: string };
+  siteVideoSm: { url: string; public_id: string };
 
   metaTitle: string;
   metaDescription: string;
-  metaKeywords: [string];
-  ogImage: string;
+  metaKeywords: string[];
+  ogImage: { url: string; public_id: string };
 
   googleAnalyticsId: string;
   facebookPixelId: string;
@@ -34,7 +34,7 @@ export interface ISettings {
   fullName: string;
   email: string;
   phone: string;
-  resume: string;
+  resume: { url: string; public_id: string };
   isAvailableForHire: boolean;
   location: string;
   socialLinks: {
@@ -50,8 +50,11 @@ export interface ISettings {
   //hero section details
   heroTitle: string;
   heroSubtitle: string;
-  heroDescription: Record<string, string>[];
-  heroImage: string;
+  heroDescription: {
+    text: string;
+    highlight?: string;
+  }[];
+  heroImage: { url: string; public_id: string };
   heroSkills: string[];
   heroCTA: {
     primary: { text: string; link: string };
@@ -76,16 +79,16 @@ const settingsSchema = new Schema<ISettings>(
       unique: true,
     },
     siteName: String,
-    siteLogo: String,
-    siteFavicon: String,
+    siteLogo: { url: String, public_id: String },
+    siteFavicon: { url: String, public_id: String },
     siteTitle: String,
     siteDescription: String,
-    siteVideoLg: String,
-    siteVideoSm: String,
+    siteVideoLg: { url: String, public_id: String },
+    siteVideoSm: { url: String, public_id: String },
     metaTitle: String,
     metaDescription: String,
     metaKeywords: [String],
-    ogImage: String,
+    ogImage: { url: String, public_id: String },
 
     googleAnalyticsId: String,
     facebookPixelId: String,
@@ -103,7 +106,7 @@ const settingsSchema = new Schema<ISettings>(
     fullName: String,
     email: String,
     phone: String,
-    resume: String,
+    resume: { url: String, public_id: String },
     isAvailableForHire: { type: Boolean, default: true },
     location: String,
     socialLinks: {
@@ -119,7 +122,7 @@ const settingsSchema = new Schema<ISettings>(
     heroTitle: String,
     heroSubtitle: String,
     heroDescription: [{ text: String, highlight: String }],
-    heroImage: String,
+    heroImage: { url: String, public_id: String },
     heroSkills: [{ type: String, trim: true }],
     heroCTA: {
       primary: { text: String, link: String },

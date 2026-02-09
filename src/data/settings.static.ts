@@ -1,20 +1,18 @@
 import { ISettings } from "../models/settings.model";
 
-const settingsStatic: Partial<ISettings> = {
-  key: "global",
-  //site details
+export const defaultSiteSettings = {
   siteName: "Prabhat",
-  siteLogo: "/images/home/avatar/pra.webp",
-  siteFavicon: "/icons/android-chrome-192x192.png",
+  siteLogo: { url: "/images/home/avatar/pra.webp", public_id: "empty" },
+  siteFavicon: { url: "/icons/android-chrome-192x192.png", public_id: "empty" },
   siteTitle: "Software Engineer",
   siteDescription:
     "Crafting digital experiences that inspire and innovate. Transforming ideas into elegant, high-performance web solutions.",
-  siteVideoLg: "/images/home/bg2.mp4",
-  siteVideoSm: "/images/home/bg.mp4",
+  siteVideoLg: { url: "/images/home/bg2.mp4", public_id: "empty" },
+  siteVideoSm: { url: "/images/home/bg.mp4", public_id: "empty" },
   metaTitle: "",
   metaDescription: "",
-  metaKeywords: ["portfoli"],
-  ogImage: "/icons/android-chrome-512x512.png",
+  metaKeywords: [],
+  ogImage: { url: "/icons/android-chrome-512x512.png", public_id: "empty" },
 
   googleAnalyticsId: "",
   facebookPixelId: "",
@@ -27,13 +25,15 @@ const settingsStatic: Partial<ISettings> = {
   },
 
   maintenanceMode: false,
-  maintenanceMessage: "Crafting digital experiences that inspire and innovate. Transforming ideas into elegant, high-performance web solutions.",
+  maintenanceMessage:
+    "Crafting digital experiences that inspire and innovate. Transforming ideas into elegant, high-performance web solutions.",
+};
 
-  //Personal Details
+export const defaultPersonalDetails = {
   fullName: "Prabhat Kumar",
   email: "kprabhat628@gmail.com",
   phone: "8294925485",
-  resume: "/resume/prabat_kumar_2026.pdf",
+  resume: { url: "/resume/prabat_kumar_2026.pdf", public_id: "empty" },
   isAvailableForHire: true,
   location: "Noida Sec-71",
   socialLinks: {
@@ -45,8 +45,9 @@ const settingsStatic: Partial<ISettings> = {
     youtube: "https://www.youtube.com/@prabhatui",
     discord: "",
   },
+};
 
-  //hero seciton details
+export const defaultHeroSection = {
   heroTitle: "Software Engineer",
   heroSubtitle: "Building modern web experiences that inspire and innovate",
   heroDescription: [
@@ -58,14 +59,15 @@ const settingsStatic: Partial<ISettings> = {
     { text: "modern", highlight: "indigo" },
     { text: " web experiences with React and Node.js." },
   ],
-  heroImage: "/images/home/avatar/pra.webp",
+  heroImage: { url: "/images/home/avatar/pra.webp", public_id: "empty" },
   heroSkills: ["React", "Next.js", "TypeScript", "Tailwind", "Node.js"],
   heroCTA: {
     primary: { text: "My Work", link: "/projects" },
     secondary: { text: "Let's Talk", link: "/contact-us" },
   },
+};
 
-  //about section details
+export const defaultAboutSection = {
   aboutTitle: "Full Stack Developer",
   aboutDescription:
     "Passionate about creating elegant, high-performance web applications that solve real-world problems. With 5+ years of experience in both frontend and backend development, I specialize in building scalable solutions using modern technologies.",
@@ -79,5 +81,20 @@ const settingsStatic: Partial<ISettings> = {
   projects: 10,
   client: 5,
   year_exp: 2,
+};
+
+const settingsStatic: Partial<ISettings> = {
+  key: "global",
+  //site details
+  ...defaultSiteSettings,
+
+  //Personal Details
+  ...defaultPersonalDetails,
+
+  //hero seciton details
+  ...defaultHeroSection,
+
+  //about section details
+  ...defaultAboutSection,
 };
 export default settingsStatic;
