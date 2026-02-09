@@ -33,7 +33,6 @@ import { useSettings } from "../../../../hooks/usePublic";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
 import { validateFile } from "../../../../lib/upload/fileValidation";
 import { useCloudinaryUpload } from "../../../../hooks/useCloudinaryUpload";
-import { UpdateSettingsInput } from "../../../../schemas/admin.settings";
 
 export default function PersonalDetailsForm() {
   const { data: settingsData } = useSettings();
