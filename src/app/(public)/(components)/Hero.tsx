@@ -122,7 +122,7 @@ export default function Hero() {
         </div>
 
         {/* ========== SOCIAL PROOF / STATS ========== */}
-        <div className="grid grid-cols-3 gap-6 md:gap-12 pt-8 w-full max-w-2xl">
+        <div className="grid grid-cols-3 gap-6 md:gap-12 py-4 w-full max-w-2xl">
           <div className="relative group">
             <div className="absolute inset-0 bg-linear-to-r from-purple-500/10 to-pink-500/10 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
             <div className="relative text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all">

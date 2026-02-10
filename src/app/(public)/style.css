@@ -1,0 +1,32 @@
+
+
+@keyframes bar {
+  0%,
+  100% {
+    height: 20%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+.animate-bar-1 {
+  animation: bar 1s ease-in-out infinite;
+  animation-delay: 0s;
+}
+.animate-bar-2 {
+  animation: bar 1s ease-in-out infinite;
+  animation-delay: 0.1s;
+}
+.animate-bar-3 {
+  animation: bar 1s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+.animate-bar-4 {
+  animation: bar 1s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+.animate-bar-5 {
+  animation: bar 1s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
