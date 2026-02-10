@@ -8,7 +8,6 @@ import { GitHub, LinkIcon } from "./(components)/Svg";
 import SkillsSlider from "./(components)/SkillsSlider";
 // import SkillsSlider3D from "./(components)/SkillsSlider";
 
-
 export default function Home() {
   const projects = [
     {
@@ -73,30 +72,11 @@ export default function Home() {
     },
   ];
 
-   const skillData = {
-    frontendData: [
-      { name: "React", emoji: "⚛️" },
-      { name: "Next.js", emoji: "▲" },
-      { name: "TypeScript", emoji: "📘" },
-      { name: "Tailwind", emoji: "🎨" },
-    ],
-    backendData: [
-      { name: "Node.js", emoji: "🟢" },
-      { name: "MongoDB", emoji: "🍃" },
-      { name: "Express", emoji: "🚂" },
-    ],
-    toolsData: [
-      { name: "Git", emoji: "🔧" },
-      { name: "Docker", emoji: "🐳" },
-      { name: "VS Code", emoji: "💻" },
-    ],
-  };
+ 
   return (
     <>
       <Hero />
-      <div>
-        <SkillsSlider skillData={skillData} />
-      </div>
+      <SkillsSlider />
       <main className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6">
         {/* ================= PAGE HEADER ================= */}
         <div className="flex items-center justify-between">

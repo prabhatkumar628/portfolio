@@ -4,6 +4,7 @@ export interface ISkill extends Document {
   name: string;
   emoji: string;
   image: string;
+  isTop: boolean;
   category: "frontend" | "backend" | "tools";
 }
 
@@ -22,6 +23,7 @@ const skillSchema = new Schema<ISkill>(
     image: {
       type: String,
     },
+    isTop: Boolean,
     category: {
       type: String,
       enum: ["frontend", "backend", "tools"],

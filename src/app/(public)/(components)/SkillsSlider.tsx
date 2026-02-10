@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { useSkills } from "../../../hooks/usePublic";
 
 interface Skill {
   name: string;
@@ -11,30 +12,11 @@ interface Skill {
   category: "frontend" | "backend" | "tools";
 }
 
-interface SkillsSliderProps {
-  skillData?: {
-    frontendData?: Skill[];
-    backendData?: Skill[];
-    toolsData?: Skill[];
-  };
-}
+export default function SkillsSlider() {
 
-export default function SkillsSlider({ skillData }: SkillsSliderProps) {
-  // Combine all skills with category info
-  const allSkills: Skill[] = [
-    ...(skillData?.frontendData?.map((s) => ({
-      ...s,
-      category: "frontend" as const,
-    })) || []),
-    ...(skillData?.backendData?.map((s) => ({
-      ...s,
-      category: "backend" as const,
-    })) || []),
-    ...(skillData?.toolsData?.map((s) => ({
-      ...s,
-      category: "tools" as const,
-    })) || []),
-  ];
+  const { data: skillData } = useSkills();
+
+ 
 
   // Category colors
   const getCategoryStyle = (category: Skill["category"]) => {
@@ -114,7 +96,7 @@ export default function SkillsSlider({ skillData }: SkillsSliderProps) {
           }}
           className="skills-swiper"
         >
-          {allSkills.map((skill, index) => {
+          {skillData?.topSkills.map((skill, index) => {
             const style = getCategoryStyle(skill.category);
             return (
               <SwiperSlide key={index}>

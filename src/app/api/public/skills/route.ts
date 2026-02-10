@@ -9,6 +9,7 @@ export async function GET() {
     const skills = await SkillModel.find({}).sort({ createdAt: -1 }).lean();
 
     const data = {
+      topSkills: skills.filter((s) => s.isTop === true),
       frontendData: skills.filter((s) => s.category === "frontend").slice(0, 6),
       backendData: skills.filter((s) => s.category === "backend").slice(0, 6),
       toolsData: skills.filter((s) => s.category === "tools").slice(0, 6),
@@ -25,5 +26,3 @@ export async function GET() {
     return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }
-
-

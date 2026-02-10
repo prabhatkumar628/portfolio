@@ -24,8 +24,8 @@ const dbConnect = async () => {
     });
     connection.isConnected = db.connections[0].readyState === 1;
     console.log(`MongoDB connected !!! HOST:`, db.connection.host);
-    // // skill seeding
-    // await seedSkills();
+    // skill seeding
+    await seedSkills();
 
     // // experience seeding
     // await seedExperience()

@@ -34,6 +34,7 @@ export const useContact = () => {
 };
 
 export interface SkillGroupData {
+  topSkills:ISkill[];
   frontendData: ISkill[];
   backendData: ISkill[];
   toolsData: ISkill[];
