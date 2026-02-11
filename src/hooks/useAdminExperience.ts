@@ -45,7 +45,7 @@ const EXPERIENCE_KEY = {
 
 export const useGetAdminExperience = (params: FetchExperienceParams) => {
   return useQuery({
-    queryKey: EXPERIENCE_KEY.all,
+    queryKey: EXPERIENCE_KEY.list(params),
     queryFn: async (): Promise<ExperienceResponseType> => {
       const { data } = await api.get("/admin/experience", { params });
       return data.data;

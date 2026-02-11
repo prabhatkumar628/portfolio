@@ -106,7 +106,6 @@ export async function POST(request: NextRequest) {
     // }
     await dbConnect();
     const body = await request.json();
-    console.log(body);
     const validate = experienceSchema.safeParse(body);
     if (!validate.success) {
       const errors: string[] = [];

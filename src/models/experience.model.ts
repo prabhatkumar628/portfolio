@@ -45,7 +45,6 @@ const experienceScheam = new Schema<IExperience>(
     },
     endDate: {
       type: Date,
-      required: true,
     },
     isCurrent: {
       type: Boolean,
