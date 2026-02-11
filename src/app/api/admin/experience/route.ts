@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../lib/dbConnect";
 import { getServerSession } from "next-auth";
 import ExperienceModel from "../../../../models/experience.model";
-import { experienceCreateSchema } from "../../../../schemas/admin.experience.schema";
 import authOptions from "../../auth/[...nextauth]/authOptions";
+import { experienceSchema } from "../../../../schemas/admin.experience.schema";
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     const searchParams = request.nextUrl.searchParams;
 
+    const employmentType = searchParams.get("employmentType");
     const limit = parseInt(searchParams.get("limit") || "6");
     const page = parseInt(searchParams.get("page") || "1");
     const search = searchParams.get("search");
@@ -34,6 +35,9 @@ export async function GET(request: NextRequest) {
         { description: { $regex: search, $options: "i" } },
       ];
     }
+    if (employmentType && employmentType !== "all") {
+      filter.employmentType = employmentType;
+    }
 
     const skip = (page - 1) * limit;
 
@@ -42,8 +46,18 @@ export async function GET(request: NextRequest) {
       .skip(skip)
       .limit(limit)
       .lean();
-    const totalExperiences = await ExperienceModel.countDocuments(filter);
-    const totalPages = Math.ceil(totalExperiences / limit);
+    const filterCount = await ExperienceModel.countDocuments(filter);
+    const [total, fullTime, partTime, contract, freelance, internship] =
+      await Promise.all([
+        ExperienceModel.countDocuments(),
+        ExperienceModel.countDocuments({ employmentType: "full-time" }),
+        ExperienceModel.countDocuments({ employmentType: "part-time" }),
+        ExperienceModel.countDocuments({ employmentType: "contract" }),
+        ExperienceModel.countDocuments({ employmentType: "freelance" }),
+        ExperienceModel.countDocuments({ employmentType: "internship" }),
+      ]);
+
+    const totalPages = Math.ceil(filterCount / limit);
 
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
@@ -54,12 +68,21 @@ export async function GET(request: NextRequest) {
         message: "Experience fetched successfully",
         data: {
           experiences,
-          totalExperiences,
+          stats: {
+            totalCount: total,
+            fullTimeCount: fullTime,
+            partTimeCount: partTime,
+            contractCount: contract,
+            freelanceCount: freelance,
+            internshipCount: internship,
+            filterCount,
+          },
           pagination: {
             totalPages,
             currentPage: page,
             hasNextPage,
             hasPrevPage,
+            limit,
           },
         },
       },
@@ -83,7 +106,8 @@ export async function POST(request: NextRequest) {
     // }
     await dbConnect();
     const body = await request.json();
-    const validate = experienceCreateSchema.safeParse(body);
+    console.log(body);
+    const validate = experienceSchema.safeParse(body);
     if (!validate.success) {
       const errors: string[] = [];
       for (const issue of validate.error.issues) {
