@@ -3,8 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../../lib/dbConnect";
 import mongoose from "mongoose";
 import SkillModel from "../../../../../models/skill.model";
-import { skillUpdateSchema } from "../../../../../schemas/admin.skill.schema";
+// import { skillUpdateSchema } from "../../../../../schemas/admin.skill.schema";
 import authOptions from "../../../auth/[...nextauth]/authOptions";
+import { skillCreateSchema } from "../../../../../schemas/admin.skill.schema";
+import { deleteOnCloudinary } from "../../../../../lib/upload/cloudinary";
 
 export async function GET(
   request: NextRequest,
@@ -59,7 +61,7 @@ export async function PATCH(
       );
     }
     const body = await request.json();
-    const validate = skillUpdateSchema.safeParse(body);
+    const validate = skillCreateSchema.safeParse(body);
     if (!validate.success) {
       const errors: string[] = [];
       for (const issue of validate.error.issues) {
@@ -70,6 +72,13 @@ export async function PATCH(
         { status: 400 },
       );
     }
+
+    const existingSill = await SkillModel.findById(id);
+
+    if (validate.data.image && existingSill?.image?.public_id) {
+      await deleteOnCloudinary(existingSill.image.public_id);
+    }
+    
     const skill = await SkillModel.findByIdAndUpdate(
       id,
       { $set: validate.data },

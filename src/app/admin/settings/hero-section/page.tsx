@@ -41,6 +41,7 @@ import {
 import { useCloudinaryUpload } from "../../../../hooks/useCloudinaryUpload";
 import { useSettings } from "../../../../hooks/usePublic";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
+import { api } from "../../../../lib/axios";
 
 export default function HeroSectionForm() {
   const [skillInput, setSkillInput] = useState("");
@@ -110,6 +111,14 @@ export default function HeroSectionForm() {
             type,
             folderName,
           });
+
+          const payload = {
+            [folderName]: {
+              url: result.url,
+              public_id: result.public_id,
+            },
+          };
+          await api.patch("/admin/settings", payload);
 
           field.onChange(result); // { url, public_id }
         } catch (error) {
@@ -324,9 +333,7 @@ export default function HeroSectionForm() {
               name="heroImage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white/80">
-                    Hero Image *
-                  </FormLabel>
+                  <FormLabel className="text-white/80">Hero Image *</FormLabel>
                   <div className="space-y-3">
                     {/* Image Preview */}
                     {field.value.url && (

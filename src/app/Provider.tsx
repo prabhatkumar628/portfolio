@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 import { Toaster } from "../components/ui/sonner";
+import { AdminLayoutProvider } from "../context/adminLayoutContext/AdminLayoutProvider";
 
 export default function Provider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -16,7 +17,7 @@ export default function Provider({ children }: { children: ReactNode }) {
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
           <Toaster />
-          {children}
+          <AdminLayoutProvider>{children}</AdminLayoutProvider>
         </QueryClientProvider>
       </SessionProvider>
     </>

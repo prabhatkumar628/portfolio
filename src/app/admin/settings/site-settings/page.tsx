@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
 import { useCloudinaryUpload } from "../../../../hooks/useCloudinaryUpload";
 import { validateFile } from "../../../../lib/upload/fileValidation";
+import { api } from "../../../../lib/axios";
 
 export default function SiteSettingsForm() {
   const [keywords, setKeywords] = useState<string[]>(
@@ -120,6 +121,14 @@ export default function SiteSettingsForm() {
             type,
             folderName,
           });
+
+          const payload = {
+            [folderName]: {
+              url: result.url,
+              public_id: result.public_id,
+            },
+          };
+          await api.patch("/admin/settings", payload);
 
           field.onChange(result); // { url, public_id }
         } catch (error) {

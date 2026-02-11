@@ -86,13 +86,7 @@ export const useCloudinaryUpload = () => {
 
       const result = await uploadPromise;
 
-      const payload = {
-        [folderName]: {
-          url: result.url,
-          public_id: result.public_id,
-        },
-      };
-      await api.patch("/admin/settings", payload);
+      
 
       toast.success("Uploaded successfully!");
       return result;

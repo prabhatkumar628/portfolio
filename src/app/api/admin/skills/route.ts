@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     const searchParams = request.nextUrl.searchParams;
 
-    const limit = parseInt(searchParams.get("limit") || "30");
+    const limit = parseInt(searchParams.get("limit") || "12");
     const page = parseInt(searchParams.get("page") || "1");
     const search = searchParams.get("search");
     const category = searchParams.get("category");
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     if (search) {
       filter.$or = [{ name: { $regex: search, $options: "i" } }];
     }
-    if (category) filter.category = category;
+    if (category && category !== "all") filter.category = category;
 
     const skip = (page - 1) * limit;
 
@@ -39,9 +39,17 @@ export async function GET(request: NextRequest) {
       .skip(skip)
       .limit(limit)
       .lean();
-    const totalSkills = await SkillModel.countDocuments(filter);
-    const totalPages = Math.ceil(totalSkills / limit);
+    const filterCount = await SkillModel.countDocuments(filter);
+    const totalCount = await SkillModel.countDocuments();
+    const frontendCount = await SkillModel.countDocuments({
+      category: "frontend",
+    });
+    const backendCount = await SkillModel.countDocuments({
+      category: "backend",
+    });
+    const toolsCount = await SkillModel.countDocuments({ category: "tools" });
 
+    const totalPages = Math.ceil(filterCount / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
 
@@ -51,12 +59,16 @@ export async function GET(request: NextRequest) {
         message: "skills fetched successfully",
         data: {
           skills,
-          totalSkills,
+          totalCount,
+          frontendCount,
+          backendCount,
+          toolsCount,
           pagination: {
             totalPages,
             currentPage: page,
             hasNextPage,
             hasPrevPage,
+            limit,
           },
         },
       },

@@ -15,6 +15,7 @@ export type FileFolderType =
   | "ogImage"
   | "siteVideoLg"
   | "siteVideoSm"
-  | "resume";
+  | "resume"
+  | "skills";
 
 export type UploadFieldType = ControllerRenderProps<UpdateCompleteSettingsInput, any>;

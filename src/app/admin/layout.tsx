@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import * as Icons from "../(public)/(components)/Svg";
 import { useUnreadMessageCount } from "../../hooks/useAdminMessages";
 import Loading from "../(public)/loading";
+import { useAdminLayoutContext } from "../../context/adminLayoutContext/AdminLayoutContext";
 
 const {
   Analytics,
@@ -28,6 +29,9 @@ export default function AdminDashboard({
 }: {
   children: React.ReactNode;
 }) {
+  const { searchInput, handleSearchChange, clearSearch } =
+    useAdminLayoutContext();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const { data: unreadData, isLoading } = useUnreadMessageCount();
@@ -115,7 +119,7 @@ export default function AdminDashboard({
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {navigation.map((item) => {
-            const isActive = pathname.startsWith(item.href) ;
+            const isActive = pathname.startsWith(item.href);
             return (
               <Link
                 onClick={() => setSidebarOpen(false)}
@@ -177,11 +181,24 @@ export default function AdminDashboard({
             <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
               <div className="relative w-full">
                 <input
+                  value={searchInput}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   type="text"
                   placeholder="Search..."
-                  className="w-full px-4 py-2 pl-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-purple-500/50 transition-colors"
+                  className="w-full px-4 py-2 pl-10 pr-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-purple-500/50 transition-colors"
                 />
+
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+
+                {searchInput && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition"
+                  >
+                    <Cross className="w-5 h-5" />
+                  </button>
+                )}
               </div>
             </div>
 

@@ -20,7 +20,16 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import GradientButton from "../../../(public)/(components)/Button";
-import { Discord, Facebook, GitHub, Instagram, LinkedIn, Loader, Twitter, YouTube } from "../../../(public)/(components)/Svg";
+import {
+  Discord,
+  Facebook,
+  GitHub,
+  Instagram,
+  LinkedIn,
+  Loader,
+  Twitter,
+  YouTube,
+} from "../../../(public)/(components)/Svg";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -33,6 +42,7 @@ import { useSettings } from "../../../../hooks/usePublic";
 import { useSettingsUpdate } from "../../../../hooks/useAdminSettings";
 import { validateFile } from "../../../../lib/upload/fileValidation";
 import { useCloudinaryUpload } from "../../../../hooks/useCloudinaryUpload";
+import { api } from "../../../../lib/axios";
 
 export default function PersonalDetailsForm() {
   const { data: settingsData } = useSettings();
@@ -97,6 +107,14 @@ export default function PersonalDetailsForm() {
             type,
             folderName,
           });
+
+          const payload = {
+            [folderName]: {
+              url: result.url,
+              public_id: result.public_id,
+            },
+          };
+          await api.patch("/admin/settings", payload);
 
           field.onChange(result); // { url, public_id }
         } catch (error) {
@@ -323,7 +341,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                     <GitHub className="w-5 h-5" /> GitHub
+                      <GitHub className="w-5 h-5" /> GitHub
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -344,7 +362,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <LinkedIn className="w-4 h-4"/> LinkedIn
+                      <LinkedIn className="w-4 h-4" /> LinkedIn
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -365,7 +383,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <Twitter className="w-4 h-4"/> Twitter/X
+                      <Twitter className="w-4 h-4" /> Twitter/X
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -386,7 +404,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <Instagram className="w-4 h-4"/> Instagram
+                      <Instagram className="w-4 h-4" /> Instagram
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -407,7 +425,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <YouTube className="w-4 h-4"/> YouTube
+                      <YouTube className="w-4 h-4" /> YouTube
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -428,7 +446,7 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <Facebook className="w-4 h-4"/> Facebook
+                      <Facebook className="w-4 h-4" /> Facebook
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -449,7 +467,8 @@ export default function PersonalDetailsForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80 flex items-center gap-2">
-                      <Discord className="w-4 h-4"/>Discord
+                      <Discord className="w-4 h-4" />
+                      Discord
                     </FormLabel>
                     <FormControl>
                       <Input

@@ -1,33 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
 import { getServerSession } from "next-auth";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { deleteOnCloudinary } from "../../../../lib/upload/cloudinary";
+// import { deleteOnCloudinary } from "@/lib/cloudinary/delete";
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Check auth
     const session = await getServerSession();
     if (!session) {
       return NextResponse.json({ success: false }, { status: 401 });
     }
 
+    // 2. Get data
     const { public_id, resource_type = "image" } = await request.json();
 
+    // 3. Validate
     if (!public_id || public_id === "empty") {
       return NextResponse.json({ success: false }, { status: 400 });
     }
 
-    const result = await cloudinary.uploader.destroy(public_id, {
-      resource_type,
-    });
+    // 4. Delete
+    const result = await deleteOnCloudinary(public_id, resource_type);
 
-    return NextResponse.json({ success: result.result === "ok" });
+    return NextResponse.json({
+      success: result.success,
+      message: result.success ? "Deleted" : "Failed",
+    });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Signature failed";
-    return NextResponse.json({ success: false, message }, { status: 500 });
+    console.error("Delete error:", error);
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }

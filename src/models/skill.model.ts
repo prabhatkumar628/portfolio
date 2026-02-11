@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface ISkill extends Document {
   name: string;
   emoji: string;
-  image: string;
+  image?: { url: string; public_id: string };
   isTop: boolean;
   category: "frontend" | "backend" | "tools";
 }
@@ -21,7 +21,8 @@ const skillSchema = new Schema<ISkill>(
       required: true,
     },
     image: {
-      type: String,
+      url: String,
+      public_id: { type: String, default: "empty" },
     },
     isTop: Boolean,
     category: {
