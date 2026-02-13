@@ -21,6 +21,9 @@ export interface IClickAnalytics {
     country?: string;
     city?: string;
     region?: string;
+    latitude?: string;
+    longitude?: string;
+    timezone?: string;
   };
   referrer?: string;
   timestamp: Date;
@@ -28,19 +31,19 @@ export interface IClickAnalytics {
 
 // ─── Click Stats Interface ───────────────────────────────
 export interface IClickStats {
-  liveDemo: {
+  liveDemoLink: {
     count: number;
     clicks: IClickAnalytics[];
   };
-  githubFrontend: {
+  githubFrontendLink: {
     count: number;
     clicks: IClickAnalytics[];
   };
-  githubBackend: {
+  githubBackendLink: {
     count: number;
     clicks: IClickAnalytics[];
   };
-  githubMobile: {
+  githubMobileLink: {
     count: number;
     clicks: IClickAnalytics[];
   };
@@ -103,6 +106,9 @@ const clickAnalyticsSchema = new Schema<IClickAnalytics>(
       country: { type: String },
       city: { type: String },
       region: { type: String },
+      latitude: { type: String },
+      longitude: { type: String },
+      timezone: { type: String },
     },
     referrer: { type: String },
     timestamp: { type: Date, default: Date.now },
@@ -113,19 +119,19 @@ const clickAnalyticsSchema = new Schema<IClickAnalytics>(
 // ─── Click Stats Schema ──────────────────────────────────
 const clickStatsSchema = new Schema<IClickStats>(
   {
-    liveDemo: {
+    liveDemoLink: {
       count: { type: Number, default: 0 },
       clicks: [clickAnalyticsSchema],
     },
-    githubFrontend: {
+    githubFrontendLink: {
       count: { type: Number, default: 0 },
       clicks: [clickAnalyticsSchema],
     },
-    githubBackend: {
+    githubBackendLink: {
       count: { type: Number, default: 0 },
       clicks: [clickAnalyticsSchema],
     },
-    githubMobile: {
+    githubMobileLink: {
       count: { type: Number, default: 0 },
       clicks: [clickAnalyticsSchema],
     },
@@ -234,10 +240,10 @@ const projectSchema = new Schema<IProject>(
     clickStats: {
       type: clickStatsSchema,
       default: () => ({
-        liveDemo: { count: 0, clicks: [] },
-        githubFrontend: { count: 0, clicks: [] },
-        githubBackend: { count: 0, clicks: [] },
-        githubMobile: { count: 0, clicks: [] },
+        liveDemoLink: { count: 0, clicks: [] },
+        githubFrontendLink: { count: 0, clicks: [] },
+        githubBackendLink: { count: 0, clicks: [] },
+        githubMobileLink: { count: 0, clicks: [] },
         totalClicks: 0,
       }),
     },

@@ -7,6 +7,7 @@ import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { GitHub, LinkIcon } from "../(components)/Svg";
 import { useGetPublicProjects } from "@/hooks/usePublicProjects";
 import { useAdminLayoutContext } from "../../../context/adminLayoutContext/AdminLayoutContext";
+import { LinkType, useClickTrack } from "../../../hooks/useClickTrack";
 
 export default function ProjectsPage() {
   // ─── States ──────────────────────────────────────────────
@@ -14,7 +15,13 @@ export default function ProjectsPage() {
   const [limit] = useState(6);
   const [category, setCategory] = useState("all");
 
-  const { globalSearch, scrollContainerRef,handleSearchChange,clearSearch,searchInput } = useAdminLayoutContext();
+  const {
+    globalSearch,
+    scrollContainerRef,
+    handleSearchChange,
+    clearSearch,
+    searchInput,
+  } = useAdminLayoutContext();
   // ─── Fetch Projects ──────────────────────────────────────
   const { data, isLoading, isError } = useGetPublicProjects({
     page,
@@ -85,6 +92,37 @@ export default function ProjectsPage() {
     return pages;
   };
 
+  const { mutate: clickTrack, isPending: clickTrackPending } = useClickTrack();
+  const handleLinkClick = ({
+    linkType,
+    projectId,
+    link,
+  }: {
+    linkType: LinkType;
+    projectId: string;
+    link: string;
+  }) => {
+    const openLink = () => {
+      const anchor = document.createElement("a");
+      anchor.href = link;
+      anchor.rel = "noopener noreferrer";
+      anchor.target = "_blank";
+      anchor.click();
+    };
+
+    clickTrack(
+      { linkType, projectId },
+      {
+        onSuccess: () => {
+          openLink();
+        },
+        onError: () => {
+          openLink();
+        },
+      },
+    );
+  };
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-12">
       {/* ================= PAGE HEADER ================= */}
@@ -112,7 +150,7 @@ export default function ProjectsPage() {
             placeholder="Search projects by name, tech stack..."
             value={searchInput}
             onChange={(e) => {
-              handleSearchChange(e.target.value)
+              handleSearchChange(e.target.value);
               setPage(1);
             }}
             className="w-full pl-14 pr-14 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
@@ -303,15 +341,21 @@ export default function ProjectsPage() {
                   {/* Action Buttons */}
                   <div className="flex gap-2">
                     {project.liveDemoLink && (
-                      <a
-                        href={project.liveDemoLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        disabled={clickTrackPending}
+                        onClick={() =>
+                          handleLinkClick({
+                            link: project.liveDemoLink!,
+                            linkType: "liveDemoLink",
+                            projectId: project._id.toString(),
+                          })
+                        }
+                        type="button"
                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
                       >
                         <LinkIcon className="w-4 h-4" />
                         Live Demo
-                      </a>
+                      </button>
                     )}
 
                     {/* GitHub Links */}
@@ -320,40 +364,58 @@ export default function ProjectsPage() {
                       project.githubMobileLink) && (
                       <div className="flex gap-2">
                         {project.githubFrontendLink && (
-                          <a
-                            href={project.githubFrontendLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
+                          <button
                             title="Frontend Repository"
+                            disabled={clickTrackPending}
+                            onClick={() =>
+                              handleLinkClick({
+                                link: project.githubFrontendLink!,
+                                linkType: "githubFrontendLink",
+                                projectId: project._id.toString(),
+                              })
+                            }
+                            type="button"
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
                           >
                             <GitHub className="w-4 h-4" />
                             {!project.githubBackendLink &&
                               !project.githubMobileLink &&
                               "GitHub"}
-                          </a>
+                          </button>
                         )}
                         {project.githubBackendLink && (
-                          <a
-                            href={project.githubBackendLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
+                          <button
                             title="Backend Repository"
+                            disabled={clickTrackPending}
+                            onClick={() =>
+                              handleLinkClick({
+                                link: project.githubBackendLink!,
+                                linkType: "githubBackendLink",
+                                projectId: project._id.toString(),
+                              })
+                            }
+                            type="button"
+                            className="flex items-center justify-center px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
                           >
                             <span className="text-xs">⚙️</span>
-                          </a>
+                          </button>
                         )}
                         {project.githubMobileLink && (
-                          <a
-                            href={project.githubMobileLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
+                          <button
                             title="Mobile Repository"
+                            disabled={clickTrackPending}
+                            onClick={() =>
+                              handleLinkClick({
+                                link: project.githubMobileLink!,
+                                linkType: "githubMobileLink",
+                                projectId: project._id.toString(),
+                              })
+                            }
+                            type="button"
+                            className="flex items-center justify-center px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
                           >
                             <span className="text-xs">📱</span>
-                          </a>
+                          </button>
                         )}
                       </div>
                     )}
@@ -387,7 +449,6 @@ export default function ProjectsPage() {
                 <button
                   onClick={() => {
                     setPage((p) => Math.max(1, p - 1));
-                  
                   }}
                   disabled={!hasPrevPage}
                   className={`p-2 rounded-xl border transition-all ${
@@ -414,7 +475,6 @@ export default function ProjectsPage() {
                         key={pageNum}
                         onClick={() => {
                           setPage(pageNum as number);
-                          
                         }}
                         className={`min-w-10 px-3 py-2 rounded-xl border transition-all ${
                           currentPage === pageNum
@@ -432,7 +492,6 @@ export default function ProjectsPage() {
                 <button
                   onClick={() => {
                     setPage((p) => Math.min(totalPages, p + 1));
-                   
                   }}
                   disabled={!hasNextPage}
                   className={`p-2 rounded-xl border transition-all ${
