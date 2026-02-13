@@ -48,7 +48,7 @@ import {
 export default function EditeSkillPage() {
   const { id } = useParams();
   const skillId = Array.isArray(id) ? id[0] : id;
-  const { data: skillData, isLoading } = useGetAdminSkillById(skillId!);
+  const { data: skillData } = useGetAdminSkillById(skillId!);
 
   const router = useRouter();
 

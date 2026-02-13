@@ -5,10 +5,12 @@ import { useSettings } from "../../../hooks/usePublic";
 import Loading from "../loading";
 import settingsStatic from "../../../data/settings.static";
 import { ArrowUp } from "lucide-react";
+import { useAdminLayoutContext } from "../../../context/adminLayoutContext/AdminLayoutContext";
 
 export default function MainBgLoop({ children }: { children: ReactNode }) {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  // const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const {scrollContainerRef} = useAdminLayoutContext()
 
   const { data: settingsData, isLoading: settingsLoading } = useSettings();
 
@@ -26,7 +28,7 @@ export default function MainBgLoop({ children }: { children: ReactNode }) {
 
     scrollContainer.addEventListener("scroll", handleScroll);
     return () => scrollContainer.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [scrollContainerRef]);
 
   const scrollToTop = () => {
     if (scrollContainerRef.current) {

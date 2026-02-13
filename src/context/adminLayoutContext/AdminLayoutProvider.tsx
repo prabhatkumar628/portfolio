@@ -1,10 +1,11 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { AdminLayoutContext } from "./AdminLayoutContext";
 import { useDebounceCallback } from "usehooks-ts";
 
 export const AdminLayoutProvider = ({ children }: { children: ReactNode }) => {
   const [searchInput, setSearchInput] = useState("");
   const [globalSearch, setGlobalSearch] = useState("");
+   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const debouncedSearch = useDebounceCallback((value: string) => {
     setGlobalSearch(value);
@@ -28,6 +29,7 @@ export const AdminLayoutProvider = ({ children }: { children: ReactNode }) => {
         globalSearch,
         handleSearchChange,
         clearSearch,
+        scrollContainerRef
       }}
     >
       {children}

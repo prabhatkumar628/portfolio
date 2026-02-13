@@ -1,10 +1,11 @@
-import { createContext,  useContext } from "react";
+import { createContext,  RefObject,  useContext } from "react";
 
 interface AdminLayoutState {
   searchInput: string;
   globalSearch: string;
   handleSearchChange: (value: string) => void
   clearSearch: () => void;
+  scrollContainerRef:RefObject<HTMLDivElement | null>
 }
 
 export const AdminLayoutContext = createContext<AdminLayoutState | undefined>(

@@ -16,6 +16,7 @@ export type FileFolderType =
   | "siteVideoLg"
   | "siteVideoSm"
   | "resume"
-  | "skills";
+  | "skills"
+  | "projects";
 
 export type UploadFieldType = ControllerRenderProps<UpdateCompleteSettingsInput, any>;
