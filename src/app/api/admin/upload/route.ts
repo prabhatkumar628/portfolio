@@ -13,7 +13,8 @@ export const FILE_FOLDERS = [
   "siteVideoLg",
   "siteVideoSm",
   "resume",
-  "skills"
+  "skills",
+  "projects"
 ] as const;
 
 export const ROOT_FOLDER: Record<UploadType, string> = {
