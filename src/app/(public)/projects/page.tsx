@@ -3,13 +3,16 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { GitHub, LinkIcon } from "../(components)/Svg";
 import { useGetPublicProjects } from "@/hooks/usePublicProjects";
 import { useAdminLayoutContext } from "../../../context/adminLayoutContext/AdminLayoutContext";
 import { LinkType, useClickTrack } from "../../../hooks/useClickTrack";
+import ProjectDetailModal from "./ProjectDetailModal";
+import { IProject } from "../../../models/project.model";
 
 export default function ProjectsPage() {
+  const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
   // ─── States ──────────────────────────────────────────────
   const [page, setPage] = useState(1);
   const [limit] = useState(6);
@@ -284,9 +287,9 @@ export default function ProjectsPage() {
                 key={project._id.toString()}
                 className="group relative p-4 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300"
               >
-                {/* Project Image */}
                 <div className="relative rounded-2xl overflow-hidden h-48 bg-linear-to-br from-purple-500/10 to-pink-500/10 mb-4">
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10" />
+
                   {project.thumbnail?.url ? (
                     <Image
                       src={project.thumbnail.url}
@@ -299,9 +302,32 @@ export default function ProjectsPage() {
                       <div className="text-6xl opacity-20">💻</div>
                     </div>
                   )}
+
+                  {/* Desktop: Hover Overlay (md and above) */}
+                  <button
+                    onClick={() => setSelectedProject(project)}
+                    className="hidden lg:flex absolute inset-0 z-20 items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
+                  >
+                    <div className="flex flex-col items-center gap-2 text-white bg-white/10 py-2 px-3 rounded-2xl border border-white/20 shadow-2xl transform scale-90 group-hover:scale-100 transition-transform cursor-pointer">
+                      <Eye size={16} className="drop-shadow-lg" />
+                      <span className="text-sm font-semibold tracking-wide">
+                        View Details
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Mobile: Always visible pill button at bottom (below md) */}
+                  <button
+                    onClick={() => setSelectedProject(project)}
+                    className="lg:hidden absolute bottom-1 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 text-white bg-black/40 backdrop-blur-md py-2 px-4 rounded-full border border-white/10 text-xs font-medium shadow-lg active:scale-95 transition-all cursor-pointer"
+                  >
+                    <Eye size={16} />
+                    <span>View Details</span>
+                  </button>
+
                   {/* Featured Badge */}
                   {project.featured && (
-                    <div className="absolute top-3 right-3 z-20 px-3 py-1 rounded-full bg-linear-to-r from-yellow-500/90 to-orange-500/90 backdrop-blur-sm text-white text-xs font-medium">
+                    <div className="absolute top-3 right-3 z-30 px-3 py-1 rounded-full bg-linear-to-r from-yellow-500/90 to-orange-500/90 backdrop-blur-sm text-white text-xs font-medium shadow-lg">
                       ⭐ Featured
                     </div>
                   )}
@@ -309,32 +335,37 @@ export default function ProjectsPage() {
 
                 {/* Project Content */}
                 <div>
-                  {/* Project Title */}
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:bg-linear-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
-                    {project.title}
-                  </h3>
+                  {/* Project Title - Also clickable */}
+                  <button
+                    onClick={() => setSelectedProject(project)}
+                    className="w-full text-left mb-3"
+                  >
+                    <h3 className="text-xl font-bold text-white group-hover:bg-linear-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 cursor-pointer">
+                      {project.title}
+                    </h3>
+                  </button>
 
                   {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-1.5 mb-4">
                     {project.technologies
                       ?.slice(0, 4)
                       .map((tech, index: number) => (
                         <span
                           key={index}
-                          className={`px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 ${tech.highlight || "text-white"}`}
+                          className={`px-2 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 ${tech.highlight || "text-white"}`}
                         >
                           {tech.name}
                         </span>
                       ))}
                     {project.technologies?.length > 4 && (
-                      <span className="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-white/60">
+                      <span className="px-2.5 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-white/60">
                         +{project.technologies.length - 4}
                       </span>
                     )}
                   </div>
 
                   {/* Project Description */}
-                  <p className="text-sm h-15 overflow-hidden text-white/60 mb-6 line-clamp-3">
+                  <p className="text-sm text-white/60 h-15 overflow-hidden mb-6 line-clamp-3">
                     {project.description}
                   </p>
 
@@ -351,10 +382,13 @@ export default function ProjectsPage() {
                           })
                         }
                         type="button"
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+                        className="flex-1 flex items-center whitespace-nowrap justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
                         <LinkIcon className="w-4 h-4" />
-                        Live Demo
+                        <span className="hidden sm:inline whitespace-nowrap">
+                          Live Demo
+                        </span>
+                        <span className="sm:hidden">Demo</span>
                       </button>
                     )}
 
@@ -375,12 +409,18 @@ export default function ProjectsPage() {
                               })
                             }
                             type="button"
-                            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
+                            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                           >
                             <GitHub className="w-4 h-4" />
                             {!project.githubBackendLink &&
-                              !project.githubMobileLink &&
-                              "GitHub"}
+                              !project.githubMobileLink && (
+                                <>
+                                  <span className="hidden sm:inline">
+                                    GitHub
+                                  </span>
+                                  <span className="sm:hidden">Code</span>
+                                </>
+                              )}
                           </button>
                         )}
                         {project.githubBackendLink && (
@@ -395,9 +435,9 @@ export default function ProjectsPage() {
                               })
                             }
                             type="button"
-                            className="flex items-center justify-center px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
+                            className="flex items-center justify-center px-3 sm:px-4 py-1.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                           >
-                            <span className="text-xs">⚙️</span>
+                            <span className="text-base">⚙️</span>
                           </button>
                         )}
                         {project.githubMobileLink && (
@@ -412,9 +452,9 @@ export default function ProjectsPage() {
                               })
                             }
                             type="button"
-                            className="flex items-center justify-center px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all duration-300"
+                            className="flex items-center justify-center px-3 sm:px-4 py-1.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                           >
-                            <span className="text-xs">📱</span>
+                            <span className="text-base">📱</span>
                           </button>
                         )}
                       </div>
@@ -424,6 +464,14 @@ export default function ProjectsPage() {
               </div>
             ))}
           </div>
+
+          {/* Detail Modal */}
+          <ProjectDetailModal
+            project={selectedProject}
+            isOpen={!!selectedProject}
+            onClose={() => setSelectedProject(null)}
+            onLinkClick={handleLinkClick}
+          />
 
           {/* ================= PAGINATION ================= */}
           {totalPages > 1 && (

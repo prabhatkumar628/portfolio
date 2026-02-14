@@ -30,3 +30,18 @@
   animation: bar 1s ease-in-out infinite;
   animation-delay: 0.4s;
 }
+
+/* Chrome, Safari */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* IE, Edge */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+}
+
+/* Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
