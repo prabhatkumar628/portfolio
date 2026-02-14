@@ -6,6 +6,7 @@ import * as Icons from "../(public)/(components)/Svg";
 import { useUnreadMessageCount } from "../../hooks/useAdminMessages";
 import Loading from "../(public)/loading";
 import { useAdminLayoutContext } from "../../context/adminLayoutContext/AdminLayoutContext";
+import { signOut } from "next-auth/react";
 
 const {
   Analytics,
@@ -47,7 +48,7 @@ export default function AdminDashboard({
       name: "Projects",
       href: "/admin/projects",
       icon: <Projects className="w-5 h-5" />,
-      badge: "12",
+      // badge: "12",
     },
     {
       name: "Skills",
@@ -66,16 +67,16 @@ export default function AdminDashboard({
       badge: unreadCount,
       badgeColor: "bg-red-500",
     },
-    {
-      name: "Blog",
-      href: "/admin/blog",
-      icon: <Blog className="w-5 h-5" />,
-    },
-    {
-      name: "Analytics",
-      href: "/admin/analytics",
-      icon: <Analytics className="w-5 h-5" />,
-    },
+    // {
+    //   name: "Blog",
+    //   href: "/admin/blog",
+    //   icon: <Blog className="w-5 h-5" />,
+    // },
+    // {
+    //   name: "Analytics",
+    //   href: "/admin/analytics",
+    //   icon: <Analytics className="w-5 h-5" />,
+    // },
     {
       name: "Settings",
       href: "/admin/settings",
@@ -207,21 +208,28 @@ export default function AdminDashboard({
               {/* Notifications */}
               <button className="relative p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-colors">
                 <Notification className="w-6 h-6" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                {unreadCount !== 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                )}
               </button>
 
               {/* View Site */}
               <Link
                 href="/"
                 target="_blank"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors"
               >
                 <Share className="w-5 h-5" />
-                <span className="text-sm font-medium">View Site</span>
+                <span className="text-sm font-medium whitespace-nowrap">
+                  View Site
+                </span>
               </Link>
 
               {/* Logout */}
-              <button className="px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all">
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+              >
                 Logout
               </button>
             </div>

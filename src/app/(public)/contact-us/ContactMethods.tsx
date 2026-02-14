@@ -90,9 +90,9 @@ export default function ContactMethods() {
       </div>
 
       {/* Contact Methods Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {contactMethods &&
-          contactMethods.map((method, index) => (
+          (contactMethods ?? []).map((method, index) => (
             <div key={index} className="group relative">
               {method.href ? (
                 <a
@@ -158,31 +158,37 @@ export default function ContactMethods() {
 
       {/* Bottom Info Banner */}
       <div className="mt-12 p-6 rounded-2xl bg-linear-to-r from-purple-500/10 via-pink-500/10 to-indigo-500/10 border border-purple-500/20">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">⚡</div>
+        <div className="flex flex-col md:flex-row md:items-start items-center justify-between gap-6">
+          <div className="flex items-start gap-3 text-center md:text-left">
+            <div className="text-3xl shrink-0">⚡</div>
             <div>
-              <h3 className="text-white font-semibold">Quick Response Time</h3>
+              <h3 className="text-white font-semibold leading-tight">
+                Quick Response Time
+              </h3>
               <p className="text-sm text-white/60">Usually within 24 hours</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">🌍</div>
+          <div className="flex items-start gap-3 text-center md:text-left">
+            <div className="text-3xl shrink-0">🌍</div>
             <div>
-              <h3 className="text-white font-semibold">Available Globally</h3>
+              <h3 className="text-white font-semibold leading-tight">
+                Available Globally
+              </h3>
               <p className="text-sm text-white/60">
                 Remote collaborations welcome
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">💼</div>
+          <div className="flex items-start gap-3 text-center md:text-left">
+            <div className="text-3xl shrink-0">💼</div>
             <div>
-              <h3 className="text-white font-semibold">Open for Projects</h3>
+              <h3 className="text-white font-semibold leading-tight">
+                Open for Projects
+              </h3>
               <p className="text-sm text-white/60">
-                Let{`'`}s build something amazing
+                Let&apos;s build something amazing
               </p>
             </div>
           </div>

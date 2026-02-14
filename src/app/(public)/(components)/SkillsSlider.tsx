@@ -1,5 +1,6 @@
 "use client";
 
+import "@/app/globals.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -13,10 +14,7 @@ interface Skill {
 }
 
 export default function SkillsSlider() {
-
   const { data: skillData } = useSkills();
-
- 
 
   // Category colors
   const getCategoryStyle = (category: Skill["category"]) => {
@@ -126,36 +124,37 @@ export default function SkillsSlider() {
       </div>
 
       {/* Custom Swiper Styles */}
-      <style jsx global>{`
-        .skills-swiper {
-          padding: 20px 0 60px 0;
-        }
-
-        .skills-swiper .swiper-pagination {
-          bottom: 20px;
-        }
-
-        .skills-swiper .swiper-pagination-bullet {
-          background: rgba(255, 255, 255, 0.3);
-          opacity: 1;
-          width: 8px;
-          height: 8px;
-          transition: all 0.3s ease;
-        }
-
-        .skills-swiper .swiper-pagination-bullet-active {
-          background: linear-gradient(to right, #a855f7, #ec4899);
-          width: 24px;
-          border-radius: 4px;
-        }
-
-        /* Mobile adjustments */
-        @media (max-width: 640px) {
-          .skills-swiper {
-            padding: 20px 0 50px 0;
-          }
-        }
-      `}</style>
     </div>
   );
 }
+
+// <style jsx global>{`
+//   .skills-swiper {
+//     padding: 20px 0 60px 0;
+//   }
+
+//   .skills-swiper .swiper-pagination {
+//     bottom: 20px;
+//   }
+
+//   .skills-swiper .swiper-pagination-bullet {
+//     background: rgba(255, 255, 255, 0.3);
+//     opacity: 1;
+//     width: 8px;
+//     height: 8px;
+//     transition: all 0.3s ease;
+//   }
+
+//   .skills-swiper .swiper-pagination-bullet-active {
+//     background: linear-gradient(to right, #a855f7, #ec4899);
+//     width: 24px;
+//     border-radius: 4px;
+//   }
+
+//   /* Mobile adjustments */
+//   @media (max-width: 640px) {
+//     .skills-swiper {
+//       padding: 20px 0 50px 0;
+//     }
+//   }
+// `}</style>;

@@ -217,3 +217,32 @@
 
 
 
+/* swiper importent classes................................... */
+/* Skills Swiper */
+.skills-swiper {
+  padding: 20px 0 60px 0 !important;
+}
+
+.skills-swiper .swiper-pagination {
+  bottom: 20px !important;
+}
+
+.skills-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.3) !important;
+  opacity: 1 !important;
+  width: 8px !important;
+  height: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.skills-swiper .swiper-pagination-bullet-active {
+  background: linear-gradient(to right, #a855f7, #ec4899) !important;
+  width: 24px !important;
+  border-radius: 4px !important;
+}
+
+@media (max-width: 640px) {
+  .skills-swiper {
+    padding: 20px 0 50px 0 !important;
+  }
+}

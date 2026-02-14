@@ -17,7 +17,6 @@ import {
 import { DeleteIcon, Edit, Plus } from "lucide-react";
 import Loading from "../../(public)/loading";
 import { useAdminSkills } from "../../../hooks/useAdminSkills";
-import { Cross, Search } from "../../(public)/(components)/Svg";
 import { useAdminLayoutContext } from "../../../context/adminLayoutContext/AdminLayoutContext";
 
 export default function SkillsPage() {
@@ -172,7 +171,7 @@ export default function SkillsPage() {
           </p>
         </div>
         <button
-          onClick={() => router.push("/admin/skills/create")}
+          onClick={() => router.push("/admin/skills/new")}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all"
         >
           <Plus size={18} />
@@ -253,7 +252,7 @@ export default function SkillsPage() {
           <div className="text-6xl mb-4">🎯</div>
           <p className="text-white/60 mb-4">No skills found</p>
           <button
-            onClick={() => router.push("/admin/skills/create")}
+            onClick={() => router.push("/admin/skills/new")}
             className="px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm hover:shadow-lg hover:shadow-purple-500/50 transition-all"
           >
             Add Your First Skill

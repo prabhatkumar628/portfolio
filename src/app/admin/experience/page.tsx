@@ -143,7 +143,7 @@ export default function ExperiencesPage() {
           <p className="text-white/60">Manage your professional work history</p>
         </div>
         <button
-          onClick={() => router.push("/admin/experience/create")}
+          onClick={() => router.push("/admin/experience/new")}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all"
         >
           <Plus size={18} />
@@ -206,7 +206,7 @@ export default function ExperiencesPage() {
           <div className="text-6xl mb-4">💼</div>
           <p className="text-white/60 mb-4">No work experience found</p>
           <button
-            onClick={() => router.push("/admin/experiences/create")}
+            onClick={() => router.push("/admin/experience/new")}
             className="px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm hover:shadow-lg hover:shadow-purple-500/50 transition-all"
           >
             Add Your First Experience

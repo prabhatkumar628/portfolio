@@ -264,7 +264,6 @@ const projectSchema = new Schema<IProject>(
 );
 
 // ─── Indexes ─────────────────────────────────────────────
-projectSchema.index({ slug: 1 });
 projectSchema.index({ featured: 1, isPublished: 1 });
 projectSchema.index({ category: 1 });
 projectSchema.index({ createdAt: -1 });

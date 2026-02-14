@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import UserModel from "../models/user.model";
-import bcrypt from "bcryptjs";
-import { seedSkills } from "../../scripts/seed-skills";
-import { seedExperience } from "../../scripts/seed-experience";
-import { seedSettings } from "../../scripts/seed-settings";
-import SettingModel from "../models/settings.model";
+// import UserModel from "../models/user.model";
+// import bcrypt from "bcryptjs";
+// import { seedSkills } from "../../scripts/seed-skills";
+// import { seedExperience } from "../../scripts/seed-experience";
+// import { seedSettings } from "../../scripts/seed-settings";
+// import SettingModel from "../models/settings.model";
 
 type Connection = { isConnected: boolean };
 
@@ -31,10 +31,10 @@ const dbConnect = async () => {
     // await seedExperience()
 
     // settings seeding
-    const setting = await SettingModel.findOne({ key: "global" });
-    if (!setting) {
-      await seedSettings();
-    }
+    // const setting = await SettingModel.findOne({ key: "global" });
+    // if (!setting) {
+    //   await seedSettings();
+    // }
 
     // admin seeding
     // const user = await UserModel.findOne({ email: "kprabhat628@gmail.com" });

@@ -10,6 +10,7 @@ import { useAdminLayoutContext } from "../../../context/adminLayoutContext/Admin
 import { LinkType, useClickTrack } from "../../../hooks/useClickTrack";
 import ProjectDetailModal from "./ProjectDetailModal";
 import { IProject } from "../../../models/project.model";
+import GradientButton from "../(components)/Button";
 
 export default function ProjectsPage() {
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
@@ -567,18 +568,12 @@ export default function ProjectsPage() {
             {`'`}s collaborate and create something amazing together!
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="px-8 py-3 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
-            >
-              Get In Touch 💬
+            <Link href="/contact-us">
+              <GradientButton gradient="purple">Get In Touch</GradientButton>
             </Link>
-            <a
-              href="mailto:prabhat.dev@gmail.com"
-              className="px-8 py-3 rounded-full border border-white/20 text-white hover:bg-white/10 transition-all duration-300"
-            >
-              Email Me 📧
-            </a>
+            <Link href={"/about-us"}>
+              <GradientButton variant="outline">About Us</GradientButton>
+            </Link>
           </div>
         </div>
       </div>

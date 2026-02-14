@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     const [projects, totalProjects] = await await Promise.all([
       ProjectModel.find(query)
-        .sort({ createdAt: -1 })
+        .sort({ featured: -1, createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
