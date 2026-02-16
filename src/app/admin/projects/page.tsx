@@ -400,12 +400,12 @@ export default function ProjectsPage() {
                 </p>
 
                 {/* Technologies */}
-                <div className="flex flex-wrap items-center gap-2 mb-4">
+                <div className="flex flex-wrap items-center gap-1.5 mb-4">
                   {project.technologies.slice(0, 3).map((tech, idx) => {
                     return (
                       <div
                         key={idx}
-                        className="group flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all"
+                        className="group flex items-center gap-2 px-2 py-1 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all"
                       >
                         <span
                           className={`text-sm font-medium ${tech.highlight || "text-white"}`}

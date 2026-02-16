@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 // import bcrypt from "bcryptjs";
 // import { seedSkills } from "../../scripts/seed-skills";
 // import { seedExperience } from "../../scripts/seed-experience";
-import { seedSettings } from "../../scripts/seed-settings";
-import SettingModel from "../models/settings.model";
+// import { seedSettings } from "../../scripts/seed-settings";
+// import SettingModel from "../models/settings.model";
 
 type Connection = { isConnected: boolean };
 
@@ -30,11 +30,11 @@ const dbConnect = async () => {
     // // experience seeding
     // await seedExperience()
 
-    //settings seeding
-    const setting = await SettingModel.findOne({ key: "global" });
-    if (!setting) {
-      await seedSettings();
-    }
+    // settings seeding
+    // const setting = await SettingModel.findOne({ key: "global" });
+    // if (!setting) {
+    //   await seedSettings();
+    // }
 
     // admin seeding
     // const user = await UserModel.findOne({ email: "kprabhat628@gmail.com" });

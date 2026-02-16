@@ -89,8 +89,8 @@ export default function ProjectDetailModal({
               )}
 
               {project.featured && (
-                <div className="absolute top-4 right-4 px-4 py-2 rounded-full bg-linear-to-r from-yellow-500 to-orange-500 text-white text-sm font-medium shadow-lg">
-                  ⭐ Featured Project
+                <div className="absolute top-4 left-4 z-30 px-4 py-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium">
+                  Featured
                 </div>
               )}
             </div>

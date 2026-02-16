@@ -182,8 +182,8 @@ export default function Home() {
 
                       {/* Featured Badge */}
                       {project.featured && (
-                        <div className="absolute top-3 right-3 z-30 px-3 py-1 rounded-full bg-linear-to-r from-yellow-500/90 to-orange-500/90 backdrop-blur-sm text-white text-xs font-medium shadow-lg">
-                          ⭐ Featured
+                        <div className="absolute top-3 right-3 z-30 px-3 py-1 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white text-xs font-medium">
+                          Featured
                         </div>
                       )}
                     </div>
@@ -195,7 +195,7 @@ export default function Home() {
                         onClick={() => setSelectedProject(project)}
                         className="w-full text-left mb-3"
                       >
-                        <h3 className="text-xl font-bold text-white group-hover:bg-linear-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 cursor-pointer">
+                        <h3 className="text-xl font-bold text-white group-hover:bg-linear-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 cursor-pointer line-clamp-1">
                           {project.title}
                         </h3>
                       </button>
