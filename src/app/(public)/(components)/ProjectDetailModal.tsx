@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { X, ExternalLink, Calendar } from "lucide-react";
-import { GitHub } from "../(components)/Svg";
+import { GitHub } from "./Svg";
 
 // Project Detail Modal Component
 export default function ProjectDetailModal({

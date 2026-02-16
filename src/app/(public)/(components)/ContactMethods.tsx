@@ -1,11 +1,5 @@
 "use client";
-import {
-  ArrowLeft,
-  Email,
-  Location,
-  Phone,
-  WhatsApp,
-} from "../(components)/Svg";
+import { ArrowLeft, Email, Location, Phone, WhatsApp } from "./Svg";
 import { useSettings } from "../../../hooks/usePublic";
 
 // Country codes ki complete list
