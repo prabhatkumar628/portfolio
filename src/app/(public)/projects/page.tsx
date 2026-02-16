@@ -288,7 +288,7 @@ export default function ProjectsPage() {
                 key={project._id.toString()}
                 className="group relative p-4 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300"
               >
-                <div className="relative rounded-2xl overflow-hidden h-48 bg-linear-to-br from-purple-500/10 to-pink-500/10 mb-4">
+                <div className="relative rounded-2xl overflow-hidden h-50 bg-linear-to-br from-purple-500/10 to-pink-500/10 mb-4">
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10" />
 
                   {project.thumbnail?.url ? (
@@ -347,7 +347,7 @@ export default function ProjectsPage() {
                   </button>
 
                   {/* Technologies */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
+                  <div className="flex flex-nowrap overflow-hidden gap-1.5 mb-4">
                     {project.technologies
                       ?.slice(0, 4)
                       .map((tech, index: number) => (

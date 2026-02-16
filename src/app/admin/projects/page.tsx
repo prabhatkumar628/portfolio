@@ -329,7 +329,7 @@ export default function ProjectsPage() {
               className="group rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden hover:border-purple-500/30 transition-all"
             >
               {/* Thumbnail */}
-              <div className="relative h-48 bg-linear-to-br from-purple-500/10 to-pink-500/10">
+              <div className="relative h-50 bg-linear-to-br from-purple-500/10 to-pink-500/10">
                 {project.thumbnail?.url ? (
                   <Image
                     src={project.thumbnail.url}
@@ -400,12 +400,12 @@ export default function ProjectsPage() {
                 </p>
 
                 {/* Technologies */}
-                <div className="flex flex-wrap items-center gap-1.5 mb-4">
+                <div className="flex flex-nowrap overflow-hidden items-center gap-1.5 mb-4">
                   {project.technologies.slice(0, 3).map((tech, idx) => {
                     return (
                       <div
                         key={idx}
-                        className="group flex items-center gap-2 px-2 py-1 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all"
+                        className="group flex items-center gap-2 px-2 py-1 text-xs rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all"
                       >
                         <span
                           className={`text-sm font-medium ${tech.highlight || "text-white"}`}
