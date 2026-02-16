@@ -29,6 +29,7 @@ import {
   useGetAdminProject,
 } from "../../../hooks/useAdminProjects";
 import { GitHub } from "../../(public)/(components)/Svg";
+import Loading from "../../(public)/loading";
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function ProjectsPage() {
   // ─── States ──────────────────────────────────
   const [view, setView] = useState<"grid" | "list">("grid");
   const [page, setPage] = useState(1);
-  const [limit] = useState(9);
+  const [limit] = useState(6);
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("all");
   const [featured, setFeatured] = useState<string | undefined>(undefined);
@@ -168,7 +169,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="space-y-6">
-      {/* {deletePending && <Loading />} */}
+      {deletePending && <Loading />}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -178,7 +179,7 @@ export default function ProjectsPage() {
         </div>
         <button
           onClick={() => router.push("/admin/projects/new")}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all cursor-pointer"
         >
           <Plus size={20} />
           New Project
@@ -249,7 +250,7 @@ export default function ProjectsPage() {
         <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/10">
           <button
             onClick={() => setView("grid")}
-            className={`p-2 rounded-lg transition-all ${
+            className={`p-2 rounded-lg transition-all cursor-pointer ${
               view === "grid"
                 ? "bg-purple-500 text-white"
                 : "text-white/60 hover:text-white"
@@ -259,7 +260,7 @@ export default function ProjectsPage() {
           </button>
           <button
             onClick={() => setView("list")}
-            className={`p-2 rounded-lg transition-all ${
+            className={`p-2 rounded-lg transition-all cursor-pointer ${
               view === "list"
                 ? "bg-purple-500 text-white"
                 : "text-white/60 hover:text-white"
@@ -436,7 +437,7 @@ export default function ProjectsPage() {
                     onClick={() =>
                       router.push(`/admin/projects/${project._id}/edit`)
                     }
-                    className="flex-1 px-4 py-2 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 text-sm font-medium text-center hover:bg-purple-500/30 transition-all flex items-center justify-center gap-1.5"
+                    className="flex-1 px-4 py-2 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 text-sm font-medium text-center hover:bg-purple-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Edit size={14} />
                     Edit
@@ -444,7 +445,7 @@ export default function ProjectsPage() {
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <button className="px-4 py-2 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all">
+                      <button className="px-4 py-2 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer">
                         <Trash2 size={16} />
                       </button>
                     </AlertDialogTrigger>

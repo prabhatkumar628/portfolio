@@ -12,7 +12,7 @@ export const deleteOnCloudinary = async (
 ) => {
   try {
     const response = await cloudinary.uploader.destroy(public_id, {
-      resource_type,
+      resource_type,invalidate:true,
     });
     return { success: response.result === "ok" };
   } catch (error) {

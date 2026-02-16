@@ -41,7 +41,6 @@ import {
   techHighlightColors,
 } from "../../../../../schemas/admin.project.schema";
 import {
-  useCreateAdminProject,
   useGETAdminProjectById,
   useUpdateAdminProjectById,
 } from "../../../../../hooks/useAdminProjects";
@@ -50,6 +49,7 @@ import {
   UploadFieldType,
   UploadType,
 } from "../../../../../types/UploadType";
+import Loading from "../../../../(public)/loading";
 
 export default function CreateProjectPage() {
   const router = useRouter();
@@ -95,6 +95,11 @@ export default function CreateProjectPage() {
         }
         try {
           const result = await uploadToCloudinary({ file, folderName, type });
+          const oldPublidId = form.getValues("thumbnail.public_id");
+          await api.post("/cloudinary/delete", {
+            public_id: oldPublidId,
+            resource_type: "image",
+          });
           field.onChange(result);
           const updateValues = form.getValues();
           api.patch(`/admin/projects/${currentId}`, updateValues);
@@ -217,15 +222,12 @@ export default function CreateProjectPage() {
 
   return (
     <div className="space-y-6">
+      {isLoading && <Loading />}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Edit Project
-          </h1>
-          <p className="text-white/60">
-            Edit project for your portfolio
-          </p>
+          <h1 className="text-3xl font-bold text-white mb-2">Edit Project</h1>
+          <p className="text-white/60">Edit project for your portfolio</p>
         </div>
         <button
           onClick={() => router.back()}
@@ -300,10 +302,7 @@ export default function CreateProjectPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80">Category *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-white/5 border-white/10 text-white">
                           <SelectValue placeholder="Select category" />
@@ -345,10 +344,7 @@ export default function CreateProjectPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-white/80">Status *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-white/5 border-white/10 text-white">
                           <SelectValue placeholder="Select status" />

@@ -85,12 +85,6 @@ export async function PATCH(
       );
     }
 
-    const oldProjectData = await ProjectModel.findById(id);
-
-    if (validate.data.thumbnail && oldProjectData?.thumbnail.public_id) {
-      await deleteOnCloudinary(oldProjectData?.thumbnail.public_id, "image");
-    }
-
     if (validate.data.title) {
       validate.data.slug = validate.data.title
         .toLowerCase()

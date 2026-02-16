@@ -4,11 +4,13 @@ import GradientButton from "./Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useSettings } from "../../../hooks/usePublic";
+import Loading from "../loading";
 
 export default function Hero() {
-  const { data: settingsData } = useSettings();
+  const { data: settingsData ,isLoading } = useSettings();
   return (
     <section className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden">
+      {isLoading && <Loading/>}
       {/* ========== CONTENT WRAPPER ========== */}
       <div className="relative z-10 flex flex-col items-center gap-8 max-w-5xl mx-auto">
         {/* ========== MAIN HEADLINE ========== */}

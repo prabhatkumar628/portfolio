@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -46,12 +46,6 @@ export default function CreateProjectPage() {
   const router = useRouter();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
-  const [allErrors, setAllErrors] = useState<string[]>([]);
-
-
-  useEffect(() => {
-    console.log(allErrors);
-  }, [allErrors]);
 
   const form = useForm<ProjectFormInputs>({
     resolver: zodResolver(projectSchema),
@@ -93,20 +87,6 @@ export default function CreateProjectPage() {
       toast.error("Thumbnail is required");
       return;
     }
-    // const validate = projectSchema.safeParse(values);
-const validate = projectSchema.safeParse(values);
-
-if (!validate.success) {
-  const errors = validate.error.issues.map(
-    (issue) => issue.message
-  );
-
-  setAllErrors(errors);
-  return;
-}
-
-// agar valid hai
-setAllErrors([]);
 
     let thumbnailData: { public_id: string; url: string } | null = null;
 
