@@ -6,6 +6,8 @@ export interface IUser extends Document {
   password: string;
   role: "admin" | "user";
   phone?: string;
+  tokenVersion: number;
+  otp: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,6 +40,14 @@ const userScheam = new Schema<IUser>(
       default: "admin",
     },
     phone: String,
+    tokenVersion: {
+      type: Number,
+      default: 0,
+      select: false,
+    },
+    otp: {
+      type: String,
+    },
   },
   { timestamps: true },
 );

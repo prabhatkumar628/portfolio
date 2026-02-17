@@ -48,7 +48,6 @@ export default function AdminDashboard({
       name: "Projects",
       href: "/admin/projects",
       icon: <Projects className="w-5 h-5" />,
-      // badge: "12",
     },
     {
       name: "Skills",
@@ -85,8 +84,9 @@ export default function AdminDashboard({
   ];
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="h-screen overflow-hidden bg-black">
       {isLoading && <Loading />}
+
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
@@ -95,7 +95,7 @@ export default function AdminDashboard({
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - unchanged */}
       <aside
         className={`fixed top-0 left-0 z-50 h-screen w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -118,7 +118,7 @@ export default function AdminDashboard({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto overscroll-contain">
           {navigation.map((item) => {
             const isActive = pathname.startsWith(item.href);
             return (
@@ -129,7 +129,7 @@ export default function AdminDashboard({
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                   isActive
                     ? "bg-linear-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-white"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
                 }`}
               >
                 {item.icon}
@@ -150,8 +150,15 @@ export default function AdminDashboard({
 
         {/* User Profile */}
         <div className="p-4 border-t border-white/10">
-          <Link href={"/admin/profile"}>
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+          <Link onClick={() => setSidebarOpen(false)} href={"/admin/profile"}>
+            <div
+              className={`flex items-center gap-3 p-3 rounded-xl transition-colors cursor-pointer border
+        ${
+          pathname.startsWith("/admin/profile")
+            ? "bg-linear-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30 text-white"
+            : "bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10"
+        }`}
+            >
               <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center">
                 <span className="text-white font-semibold">PK</span>
               </div>
@@ -165,10 +172,8 @@ export default function AdminDashboard({
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className="lg:pl-64">
-        {/* Top Header */}
-        <header className="sticky top-0 z-30 h-16 bg-black/40 backdrop-blur-xl border-b border-white/10">
+      <div className="lg:pl-64 h-screen flex flex-col overflow-hidden">
+        <header className="shrink-0 z-30 h-16 bg-black/40 backdrop-blur-xl border-b border-white/10">
           <div className="flex items-center justify-between h-full px-6">
             {/* Mobile Menu Button */}
             <button
@@ -188,9 +193,7 @@ export default function AdminDashboard({
                   placeholder="Search..."
                   className="w-full px-4 py-2 pl-10 pr-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-purple-500/50 transition-colors"
                 />
-
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-
                 {searchInput && (
                   <button
                     type="button"
@@ -205,7 +208,6 @@ export default function AdminDashboard({
 
             {/* Right Actions */}
             <div className="flex items-center gap-4">
-              {/* Notifications */}
               <button className="relative p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-colors">
                 <Notification className="w-6 h-6" />
                 {unreadCount !== 0 && (
@@ -213,7 +215,6 @@ export default function AdminDashboard({
                 )}
               </button>
 
-              {/* View Site */}
               <Link
                 href="/"
                 target="_blank"
@@ -225,7 +226,6 @@ export default function AdminDashboard({
                 </span>
               </Link>
 
-              {/* Logout */}
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="px-4 py-2 rounded-xl bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all"
@@ -236,8 +236,9 @@ export default function AdminDashboard({
           </div>
         </header>
 
-        {/* Main Content Area */}
-        <main className="p-4 sm:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6">
+          {children}
+        </main>
       </div>
     </div>
   );
