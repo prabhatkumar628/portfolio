@@ -1,5 +1,5 @@
 "use client";
-
+import "./style.css"
 export default function Loading() {
   return (
     <div className="fixed inset-0 z-51 h-screen flex items-center justify-center bg-black/90 backdrop-blur-2xl">

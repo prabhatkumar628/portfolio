@@ -84,7 +84,7 @@ export default function AdminDashboard({
   ];
 
   return (
-    <div className="h-screen overflow-hidden bg-black">
+    <div className="h-svh overflow-hidden bg-black">
       {isLoading && <Loading />}
 
       {/* Mobile Sidebar Overlay */}
@@ -97,7 +97,7 @@ export default function AdminDashboard({
 
       {/* Sidebar - unchanged */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-svh w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -172,7 +172,7 @@ export default function AdminDashboard({
         </div>
       </aside>
 
-      <div className="lg:pl-64 h-screen flex flex-col overflow-hidden">
+      <div className="lg:pl-64 h-svh flex flex-col overflow-hidden">
         <header className="shrink-0 z-30 h-16 bg-black/40 backdrop-blur-xl border-b border-white/10">
           <div className="flex items-center justify-between h-full px-6">
             {/* Mobile Menu Button */}
