@@ -17,34 +17,58 @@ import Link from "next/link";
 import MainBgLoop from "../../(public)/(components)/MainBgLoop";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import Loading from "../../(public)/loading";
+import { Eye, EyeOff } from "lucide-react";
+import { useDebounceCallback } from "usehooks-ts";
 
 export default function LoginClient() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const debouncedPassword = useDebounceCallback(setShowPassword, 2000);
   const router = useRouter();
-  const searchPaarams = useSearchParams()
-  const callbackUrl = searchPaarams.get("callbackUrl") || "/admin/dashboard"
+  const searchPaarams = useSearchParams();
+  const callbackUrl = searchPaarams.get("callbackUrl") || "/admin/dashboard";
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-      callbackUrl, 
-    });
+    try {
+      setIsSubmiting(true);
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        callbackUrl,
+      });
 
-    if (res?.error) {
-      alert(res.error);
-      return;
+      if (!res) {
+        throw new Error("No response from server");
+      }
+
+      if (res.error) {
+        toast.error(res.error);
+        return;
+      }
+
+      if (res.ok) {
+        toast.success("Login successful");
+        router.replace(res.url || callbackUrl);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsSubmiting(false);
     }
-
-    router.replace(callbackUrl);
   };
 
   return (
     <MainBgLoop>
+      {isSubmiting && <Loading />}
       <div className="w-full min-h-screen flex justify-center items-center p-4">
         <div className="w-full max-w-md">
           {/* Login Card */}
@@ -52,7 +76,7 @@ export default function LoginClient() {
             <div className="relative space-y-6">
               {/* Header */}
               <div className="text-center mb-8">
-                <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 mb-6">
+                <div className="inline-block px-4 py-2 rounded-full bg-linear-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 mb-6">
                   <span className="text-sm text-purple-400 font-medium">
                     👋 Welcome Back
                   </span>
@@ -80,7 +104,7 @@ export default function LoginClient() {
                           Email
                         </FormLabel>
                         <FormControl>
-                          <div className="mt-1 p-0.5 rounded-full bg-white/10 transition-all duration-300 group-focus-within:bg-gradient-to-r group-focus-within:from-purple-500 group-focus-within:via-pink-500 group-focus-within:to-indigo-500">
+                          <div className="mt-1 p-0.5 rounded-full bg-white/10 transition-all duration-300 group-focus-within:bg-linear-to-r group-focus-within:from-purple-500 group-focus-within:via-pink-500 group-focus-within:to-indigo-500">
                             <Input
                               placeholder="you@example.com"
                               type="email"
@@ -112,13 +136,27 @@ export default function LoginClient() {
                           </Link>
                         </div>
                         <FormControl>
-                          <div className="mt-1 p-0.5 rounded-full bg-white/10 transition-all duration-300 group-focus-within:bg-gradient-to-r group-focus-within:from-purple-500 group-focus-within:via-pink-500 group-focus-within:to-indigo-500">
+                          <div className="relative mt-1 p-0.5 rounded-full bg-white/10 transition-all duration-300 group-focus-within:bg-linear-to-r group-focus-within:from-purple-500 group-focus-within:via-pink-500 group-focus-within:to-indigo-500">
                             <Input
                               placeholder="Enter your password"
-                              type="password"
+                              type={showPassword ? "text" : "password"}
                               className="rounded-full bg-black/70 border-none text-white placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0"
                               {...field}
                             />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowPassword((p) => !p);
+                                debouncedPassword(false);
+                              }}
+                              className={`${field.value.length > 0 ? "" : "hidden"} absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors cursor-pointer`}
+                            >
+                              {showPassword ? (
+                                <EyeOff size={16} />
+                              ) : (
+                                <Eye size={16} />
+                              )}
+                            </button>
                           </div>
                         </FormControl>
                         <FormMessage className="text-xs text-red-400" />

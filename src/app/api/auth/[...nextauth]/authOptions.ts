@@ -16,29 +16,26 @@ export const authOptions: AuthOptions = {
       async authorize(credentials) {
         await dbConnect();
 
-        if (!credentials?.email || !credentials?.password) return null;
-        //    {
-        //   throw new Error("Invalid credentials");
-        // }
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid credentials");
+        }
 
         const user = await UserModel.findOne({
           email: credentials.email,
         }).select("+password +tokenVersion");
 
-        if (!user) return null;
-        //    {
-        //   throw new Error("Invalid credentials");
-        // }
+        if (!user) {
+          throw new Error("User not found");
+        }
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password,
         );
 
-        if (!isPasswordValid) return null;
-        //   {
-        //   throw new Error("Invalid credentials");
-        // }
+        if (!isPasswordValid) {
+          throw new Error("Invalid credentials");
+        }
 
         return {
           id: user._id.toString(),
