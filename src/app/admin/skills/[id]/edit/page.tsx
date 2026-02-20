@@ -54,7 +54,7 @@ export default function EditeSkillPage() {
 
   const form = useForm<SkillFormInputs>({
     resolver: zodResolver(skillCreateSchema),
-    defaultValues: defaultSkillValues,
+    defaultValues: skillData ?? defaultSkillValues,
   });
 
   useEffect(() => {
@@ -90,6 +90,13 @@ export default function EditeSkillPage() {
 
         try {
           const result = await uploadToCloudinary({ file, type, folderName });
+          const oldPublidId = form.getValues("image.public_id");
+          if (oldPublidId) {
+            await api.post("/cloudinary/delete", {
+              public_id: oldPublidId,
+              resource_type: "image",
+            });
+          }
           field.onChange(result);
           const updateValues = form.getValues();
           await api.patch(`/admin/skills/${skillId}`, updateValues);
@@ -102,7 +109,12 @@ export default function EditeSkillPage() {
     input.click();
   };
 
-  const { mutate: updateMutate,isError:isUpdateError, error:updateError,isPending } = useUpdateAdminSkill();
+  const {
+    mutate: updateMutate,
+    isError: isUpdateError,
+    error: updateError,
+    isPending,
+  } = useUpdateAdminSkill();
 
   const onSubmit = async (values: SkillFormInputs) => {
     updateMutate(
@@ -110,7 +122,7 @@ export default function EditeSkillPage() {
       {
         onSuccess: () => {
           toast.success("Updated successfully");
-          router.push("/admin/skills")
+          router.push("/admin/skills");
         },
         onError: (error) => {
           toast.error("Update failed");

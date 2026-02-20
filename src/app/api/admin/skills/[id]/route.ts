@@ -73,12 +73,6 @@ export async function PATCH(
       );
     }
 
-    const existingSill = await SkillModel.findById(id);
-
-    if (validate.data.image && existingSill?.image?.public_id) {
-      await deleteOnCloudinary(existingSill.image.public_id);
-    }
-    
     const skill = await SkillModel.findByIdAndUpdate(
       id,
       { $set: validate.data },
