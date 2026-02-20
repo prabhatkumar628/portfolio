@@ -91,7 +91,7 @@ export default function EditeSkillPage() {
         try {
           const result = await uploadToCloudinary({ file, type, folderName });
           const oldPublidId = form.getValues("image.public_id");
-          if (oldPublidId) {
+          if (oldPublidId && oldPublidId !== "empty") {
             await api.post("/cloudinary/delete", {
               public_id: oldPublidId,
               resource_type: "image",
