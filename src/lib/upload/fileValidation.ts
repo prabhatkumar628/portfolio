@@ -10,8 +10,8 @@ export const FILE_VALIDATION_RULES: Record<
 > = {
   image: {
     maxSize: 2 * 1024 * 1024,
-    allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
-    allowedExtensions: ["jpg", "jpeg", "png", "webp","gif"],
+    allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"],
+    allowedExtensions: ["jpg", "jpeg", "png", "webp", "gif", "svg"],
   },
   video: {
     maxSize: 20 * 1024 * 1024,
@@ -23,10 +23,7 @@ export const FILE_VALIDATION_RULES: Record<
   },
 };
 
-export const validateFile = (
-  file: File,
-  type: UploadType,
-) => {
+export const validateFile = (file: File, type: UploadType) => {
   const rules = FILE_VALIDATION_RULES[type];
 
   if (!rules) {

@@ -6,6 +6,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useSkills } from "../../../hooks/usePublic";
+import Image from "next/image";
 
 interface Skill {
   name: string;
@@ -108,7 +109,23 @@ export default function SkillsSlider() {
                   <div
                     className={`relative p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm hover:border-${style.border.split("-")[1]}-500/50 hover:bg-white/5 transition-all duration-300 text-center h-full flex flex-col items-center justify-center`}
                   >
-                    <div className="text-4xl mb-3">{skill.emoji}</div>
+                    <div className="mb-3 flex items-center justify-center">
+                      <div className="w-10 h-10 flex items-center justify-center">
+                        {skill.image?.url ? (
+                          <Image
+                            src={skill.image.url}
+                            alt={skill.name}
+                            width={48}
+                            height={48}
+                            className="w-10 h-10 object-contain"
+                          />
+                        ) : (
+                          <span className="text-3xl leading-none">
+                            {skill.emoji}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                     <h3 className="text-sm font-medium text-white/90">
                       {skill.name}
                     </h3>

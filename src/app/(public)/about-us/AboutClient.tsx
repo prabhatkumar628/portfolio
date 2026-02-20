@@ -25,11 +25,11 @@ export default function AboutClient() {
   // }
 
   const downloadUrl = settingsData?.resume?.url
-  ? getCloudinaryDownloadUrl(settingsData.resume.url)
-  : null;
+    ? getCloudinaryDownloadUrl(settingsData.resume.url)
+    : null;
 
   // lib/cloudinary.ts
-   function getCloudinaryDownloadUrl(url: string): string {
+  function getCloudinaryDownloadUrl(url: string): string {
     if (!url) return "";
 
     const parts = url.split("/upload/");
@@ -169,7 +169,24 @@ export default function AboutClient() {
                 <div key={`frontend-${index}`} className="group relative">
                   <div className="absolute inset-0 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm hover:border-purple-500/50 hover:bg-white/5 transition-all duration-300 text-center">
-                    <div className="text-4xl mb-3">{tech.emoji}</div>
+                    <div className="mb-3 flex items-center justify-center">
+                      <div className="w-10 h-10 flex items-center justify-center">
+                        {tech.image?.url ? (
+                          <Image
+                            src={tech.image.url}
+                            alt={tech.name}
+                            width={48}
+                            height={48}
+                            className="w-10 h-10 object-contain"
+                          />
+                        ) : (
+                          <span className="text-3xl leading-none">
+                            {tech.emoji}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
                     <h3 className="text-sm font-medium text-white/90">
                       {tech.name}
                     </h3>
@@ -186,7 +203,23 @@ export default function AboutClient() {
                 <div key={`backend-${index}`} className="group relative">
                   <div className="absolute inset-0 bg-linear-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm hover:border-green-500/50 hover:bg-white/5 transition-all duration-300 text-center">
-                    <div className="text-4xl mb-3">{tech.emoji}</div>
+                    <div className="mb-3 flex items-center justify-center">
+                      <div className="w-10 h-10 flex items-center justify-center">
+                        {tech.image?.url ? (
+                          <Image
+                            src={tech.image.url}
+                            alt={tech.name}
+                            width={48}
+                            height={48}
+                            className="w-10 h-10 object-contain"
+                          />
+                        ) : (
+                          <span className="text-3xl leading-none">
+                            {tech.emoji}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                     <h3 className="text-sm font-medium text-white/90">
                       {tech.name}
                     </h3>
@@ -203,7 +236,23 @@ export default function AboutClient() {
                 <div key={`tools-${index}`} className="group relative">
                   <div className="absolute inset-0 bg-linear-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm hover:border-blue-500/50 hover:bg-white/5 transition-all duration-300 text-center">
-                    <div className="text-4xl mb-3">{tech.emoji}</div>
+                    <div className="mb-3 flex items-center justify-center">
+                      <div className="w-10 h-10 flex items-center justify-center">
+                        {tech.image?.url ? (
+                          <Image
+                            src={tech.image.url}
+                            alt={tech.name}
+                            width={48}
+                            height={48}
+                            className="w-10 h-10 object-contain"
+                          />
+                        ) : (
+                          <span className="text-3xl leading-none">
+                            {tech.emoji}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                     <h3 className="text-sm font-medium text-white/90">
                       {tech.name}
                     </h3>
@@ -311,4 +360,3 @@ export default function AboutClient() {
     </main>
   );
 }
-
