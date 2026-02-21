@@ -94,3 +94,42 @@ export async function PATCH(
     return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+    const { id } = await params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid experience ID" },
+        { status: 400 },
+      );
+    }
+
+    const experience = await ExperienceModel.findByIdAndDelete(id);
+    if (!experience) {
+      return NextResponse.json(
+        { success: false, message: "Experience not found" },
+        { status: 404 },
+      );
+    }
+    return NextResponse.json(
+      { success: true, message: "Experience deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json({ success: false, message }, { status: 500 });
+  }
+}

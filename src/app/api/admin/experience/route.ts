@@ -7,13 +7,13 @@ import { experienceSchema } from "../../../../schemas/admin.experience.schema";
 
 export async function GET(request: NextRequest) {
   try {
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return NextResponse.json(
-    //     { success: false, message: "Unauthorized" },
-    //     { status: 401 },
-    //   );
-    // }
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
     await dbConnect();
     const searchParams = request.nextUrl.searchParams;
 
@@ -97,13 +97,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return NextResponse.json(
-    //     { success: false, message: "Unauthorized" },
-    //     { status: 401 },
-    //   );
-    // }
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
     await dbConnect();
     const body = await request.json();
     const validate = experienceSchema.safeParse(body);

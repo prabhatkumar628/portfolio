@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { deleteOnCloudinary } from "../../../../lib/upload/cloudinary";
-// import { deleteOnCloudinary } from "@/lib/cloudinary/delete";
+import authOptions from "../../auth/[...nextauth]/authOptions";
 
 export async function POST(request: NextRequest) {
   try {
     // 1. Check auth
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ success: false }, { status: 401 });
     }

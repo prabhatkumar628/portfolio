@@ -3,23 +3,21 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../../lib/dbConnect";
 import mongoose from "mongoose";
 import SkillModel from "../../../../../models/skill.model";
-// import { skillUpdateSchema } from "../../../../../schemas/admin.skill.schema";
 import authOptions from "../../../auth/[...nextauth]/authOptions";
 import { skillCreateSchema } from "../../../../../schemas/admin.skill.schema";
-import { deleteOnCloudinary } from "../../../../../lib/upload/cloudinary";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return NextResponse.json(
-    //     { success: false, message: "Unauthorized" },
-    //     { status: 401 },
-    //   );
-    // }
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
     await dbConnect();
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -45,13 +43,13 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return NextResponse.json(
-    //     { success: false, message: "Unauthorized" },
-    //     { status: 401 },
-    //   );
-    // }
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
     await dbConnect();
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -68,7 +66,7 @@ export async function PATCH(
         errors.push(issue.message);
       }
       return NextResponse.json(
-        { success: false, message: "Valiation failed" },
+        { success: false, message: "Valiation failed", errors },
         { status: 400 },
       );
     }

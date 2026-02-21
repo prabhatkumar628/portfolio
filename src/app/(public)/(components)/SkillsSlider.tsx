@@ -15,7 +15,7 @@ interface Skill {
 }
 
 export default function SkillsSlider() {
-  const { data: skillData } = useSkills();
+  const { data: skillData, isLoading } = useSkills();
 
   // Category colors
   const getCategoryStyle = (category: Skill["category"]) => {
@@ -61,83 +61,85 @@ export default function SkillsSlider() {
 
       {/* Swiper Slider */}
       <div className="w-full">
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          spaceBetween={20}
-          slidesPerView={2}
-          loop={true}
-          autoplay={{
-            delay: 2500,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          }}
-          pagination={{
-            clickable: true,
-            dynamicBullets: true,
-          }}
-          breakpoints={{
-            640: {
-              slidesPerView: 3,
-              spaceBetween: 20,
-            },
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 24,
-            },
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 24,
-            },
-            1280: {
-              slidesPerView: 6,
-              spaceBetween: 24,
-            },
-          }}
-          className="skills-swiper"
-        >
-          {skillData?.topSkills.map((skill, index) => {
-            const style = getCategoryStyle(skill.category);
-            return (
-              <SwiperSlide key={index}>
-                <div className="group relative h-full">
-                  {/* Glow Effect */}
-                  <div
-                    className={`absolute inset-0 bg-linear-to-r ${style.gradient} rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                  ></div>
+        {!isLoading && skillData?.topSkills.length && (
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={20}
+            slidesPerView={2}
+            loop={true}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 4,
+                spaceBetween: 24,
+              },
+              1024: {
+                slidesPerView: 5,
+                spaceBetween: 24,
+              },
+              1280: {
+                slidesPerView: 6,
+                spaceBetween: 24,
+              },
+            }}
+            className="skills-swiper"
+          >
+            {skillData?.topSkills.map((skill, index) => {
+              const style = getCategoryStyle(skill.category);
+              return (
+                <SwiperSlide key={index}>
+                  <div className="group relative h-full">
+                    {/* Glow Effect */}
+                    <div
+                      className={`absolute inset-0 bg-linear-to-r ${style.gradient} rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                    ></div>
 
-                  {/* Card */}
-                  <div
-                    className={`relative p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm hover:border-${style.border.split("-")[1]}-500/50 hover:bg-white/5 transition-all duration-300 text-center h-full flex flex-col items-center justify-center`}
-                  >
-                    <div className="mb-3 flex items-center justify-center">
-                      <div className="w-10 h-10 flex items-center justify-center">
-                        {skill.image?.url ? (
-                          <Image
-                            src={skill.image.url}
-                            alt={skill.name}
-                            width={48}
-                            height={48}
-                            className="w-10 h-10 object-contain"
-                          />
-                        ) : (
-                          <span className="text-3xl leading-none">
-                            {skill.emoji}
-                          </span>
-                        )}
+                    {/* Card */}
+                    <div
+                      className={`relative p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm hover:border-${style.border.split("-")[1]}-500/50 hover:bg-white/5 transition-all duration-300 text-center h-full flex flex-col items-center justify-center`}
+                    >
+                      <div className="mb-3 flex items-center justify-center">
+                        <div className="w-10 h-10 flex items-center justify-center">
+                          {skill.image?.url ? (
+                            <Image
+                              src={skill.image.url}
+                              alt={skill.name}
+                              width={48}
+                              height={48}
+                              className="w-10 h-10 object-contain"
+                            />
+                          ) : (
+                            <span className="text-3xl leading-none">
+                              {skill.emoji}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                      <h3 className="text-sm font-medium text-white/90">
+                        {skill.name}
+                      </h3>
+                      <span className={`text-xs ${style.text} mt-1 block`}>
+                        {style.label}
+                      </span>
                     </div>
-                    <h3 className="text-sm font-medium text-white/90">
-                      {skill.name}
-                    </h3>
-                    <span className={`text-xs ${style.text} mt-1 block`}>
-                      {style.label}
-                    </span>
                   </div>
-                </div>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        )}
       </div>
 
       {/* Custom Swiper Styles */}
